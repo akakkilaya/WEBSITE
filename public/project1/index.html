@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Akash Kakkilaya" />
+    <meta name="description" content="Describe your website">
+    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico">
+    <title>Project 1: Exploratory Data Analysis</title>
+    <meta name="generator" content="Hugo 0.70.0" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,200bold,400old" />
+    
+    <!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+    
+  </head>
+
+  <body>
+    <div id="wrap">
+
+      
+      <nav class="navbar navbar-default">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/"><i class="fa fa-home"></i></a>
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div class="navbar-collapse collapse" id="navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+        <li><a href="/blog/">BLOG</a></li>
+        
+        <li><a href="/projects/">PROJECTS</a></li>
+        
+        <li><a href="/resume/">RESUME</a></li>
+        
+      
+      </ul>
+    </div>
+  </div>
+</nav>
+
+      
+      <div class="container">
+        <div class="blog-post">
+          <h3>
+            <strong><a href="/project1/">Project 1: Exploratory Data Analysis</a></strong>
+          </h3>
+        </div>
+        <div class="blog-title">
+          <h4>
+          January 1, 0001
+            &nbsp;&nbsp;
+            
+          </h4>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="blogpost">
+              
+
+
+<p>I chose three datasets for this project. All three datasets focus on the years 2016-2017. The first dataset includes the amount of wine and spirits sold in retail stores in different counties in Pennsylvania. The second dataset discusses the amount of money in terms of wages and collected that is lost due to premature opioid related mortality in each county in Pennsylvania. The third dataset includes data (total count and rate per 1000 maternal hospital stays) regarding the number mothers in each Pennsylvania county who at the time of delivery or other pregancy-related stays had with issues regarding opioid use, abuse, and/or dependence. I wanted to see if there is a correlation between number of mothers who had opioid issues, the amount of money lost in terms of wages and tax, and the amount of alcohol sold in the county. I found these datasets on <a href="https://data.pa.gov/browse" class="uri">https://data.pa.gov/browse</a>. I picked these datasets because opioid abuse is a pervasive issue in the US. I expect there to be a positive correlation between the amount of money lost due to premature opiod death and the number of mothers who had opioid issues during their hospital stay. I also expect there to be a positive correlation between these two variables and the amount of alcohol sold.</p>
+<pre class="r"><code>glimpse(Wine)</code></pre>
+<pre><code>## Rows: 201
+## Columns: 9
+## $ FIPS.State.Code               &lt;int&gt; 42, 42, 42, 42, 42, 42, 42, 42, 42, 42,…
+## $ FIPS.County.Code              &lt;int&gt; 5, 9, 69, 1, 43, 73, 97, 11, 107, 21, 1…
+## $ Pennsylvania.County.Code      &lt;int&gt; 3, 5, 35, 1, 22, 37, 49, 6, 54, 11, 57,…
+## $ County                        &lt;fct&gt; Armstrong, Bedford, Lackawanna, Adams, …
+## $ Fiscal.Year                   &lt;fct&gt; 2017-18, 2018-19, 2017-18, 2016-17, 201…
+## $ Sales                         &lt;int&gt; 4276002, 3973579, 43662634, 6423569, 50…
+## $ Latitude                      &lt;dbl&gt; 40.81509, 40.00738, 41.43910, 39.87210,…
+## $ Longitude                     &lt;dbl&gt; -79.47317, -78.49116, -75.61218, -77.22…
+## $ Georeferenced.County.location &lt;fct&gt; POINT (-79.47316899 40.81509526), POINT…</code></pre>
+<pre class="r"><code>glimpse(wage)</code></pre>
+<pre><code>## Rows: 136
+## Columns: 17
+## $ Geographic.Area                                              &lt;fct&gt; County, …
+## $ Geographic.Name                                              &lt;fct&gt; Greene, …
+## $ Gender                                                       &lt;fct&gt; All, All…
+## $ Age                                                          &lt;fct&gt; All (0 t…
+## $ Year                                                         &lt;int&gt; 2017, 20…
+## $ Time.Period                                                  &lt;fct&gt; 2017 Ann…
+## $ Time.Period.Dates                                            &lt;fct&gt; 1/1/2017…
+## $ Estimated.Lost.Lifetime.Wages                                &lt;dbl&gt; 9055001,…
+## $ Estimated.Lost.Lifetime.Wages.Description                    &lt;fct&gt; Estimate…
+## $ Estimated.Lost.Lifetime.State.Income.Tax.Revenue             &lt;dbl&gt; 277988.5…
+## $ Estimated.Lost.Lifetime.State.Income.Tax.Revenue.Description &lt;fct&gt; Estimate…
+## $ County.Code.Number                                           &lt;int&gt; 30, 46, …
+## $ County.Code.Text                                             &lt;int&gt; 30, 46, …
+## $ State.FIPS.Code                                              &lt;int&gt; 42, 42, …
+## $ County.FIPS.Code                                             &lt;int&gt; 59, 91, …
+## $ Latitude.Longitude                                           &lt;fct&gt; &quot;(39.854…
+## $ Georeferenced.Latitude...Longitude                           &lt;int&gt; 37, 57, …</code></pre>
+<pre class="r"><code>glimpse(maternal)</code></pre>
+<pre><code>## Rows: 68
+## Columns: 14
+## $ County.Name                             &lt;fct&gt; COMMONWEALTH, BEDFORD, BUTLER…
+## $ FIPS.County.Code                        &lt;int&gt; 42000, 42009, 42019, 42111, 4…
+## $ State.FIPS.Code                         &lt;int&gt; 42, 42, 42, 42, 42, 42, 42, 4…
+## $ County.FIPS.Code                        &lt;int&gt; 0, 9, 19, 111, 83, 47, 73, 49…
+## $ County.Code.Number                      &lt;int&gt; 0, 5, 10, 56, 42, 24, 37, 25,…
+## $ Latitude.Longitude                      &lt;fct&gt; &quot;(39.346129, -75.167756)&quot;, &quot;(…
+## $ Time.Period                             &lt;fct&gt; CY 2016 - CY 2017, CY 2016 - …
+## $ Time.Period.Date.Start                  &lt;fct&gt; 01/01/2016, 01/01/2016, 01/01…
+## $ Time.Period.Date.End                    &lt;fct&gt; 12/31/2017, 12/31/2017, 12/31…
+## $ Count.of.Maternal.Stays.with.Opioid.Use &lt;dbl&gt; NA, 18, 108, 30, NA, 47, 63, …
+## $ Type.of.Count                           &lt;fct&gt; Number of maternal hospital s…
+## $ Rate.of.Maternal.Stays.with.Opioid.Use  &lt;dbl&gt; 19.6, 20.6, 28.8, 23.1, 7.8, …
+## $ Type.of.Rate                            &lt;fct&gt; Rate of maternal hospital sta…
+## $ New.Georeferenced.Column                &lt;fct&gt; POINT (-75.167756 39.346129),…</code></pre>
+<pre class="r"><code>Wine &lt;- as.data.frame(Wine)
+newWine &lt;- Wine %&gt;% filter(Fiscal.Year == &quot;2016-17&quot;)
+newWine$County &lt;- toupper(newWine$County)
+newWage &lt;- wage %&gt;% group_by(Geographic.Name) %&gt;% summarize(LostWages=sum(Estimated.Lost.Lifetime.Wages),LostTax=sum(Estimated.Lost.Lifetime.State.Income.Tax.Revenue)) 
+newWage$Geographic.Name &lt;- toupper(newWage$Geographic.Name)
+joined &lt;- maternal %&gt;% left_join(newWine, by= c(County.Name = &quot;County&quot;)) %&gt;% rename(County=County.Name) 
+compjoin &lt;- joined %&gt;% left_join(newWage, by=c(County= &quot;Geographic.Name&quot;))
+onlycounty &lt;- compjoin[!grepl(&quot;COMMONWEALTH&quot;,compjoin$County),]
+onlycounty &lt;- select(onlycounty,-c(FIPS.County.Code.x))
+onlycounty &lt;- onlycounty %&gt;% rename(County.FIPS=FIPS.County.Code.y)
+onlycounty &lt;- select(onlycounty,-c(County.FIPS, Pennsylvania.County.Code ,  FIPS.State.Code, Fiscal.Year  ))
+glimpse(onlycounty)</code></pre>
+<pre><code>## Rows: 67
+## Columns: 19
+## $ County                                  &lt;chr&gt; &quot;BEDFORD&quot;, &quot;BUTLER&quot;, &quot;SOMERSE…
+## $ State.FIPS.Code                         &lt;int&gt; 42, 42, 42, 42, 42, 42, 42, 4…
+## $ County.FIPS.Code                        &lt;int&gt; 9, 19, 111, 83, 47, 73, 49, 1…
+## $ County.Code.Number                      &lt;int&gt; 5, 10, 56, 42, 24, 37, 25, 52…
+## $ Latitude.Longitude                      &lt;fct&gt; &quot;(40.0073753643, -78.49116473…
+## $ Time.Period                             &lt;fct&gt; CY 2016 - CY 2017, CY 2016 - …
+## $ Time.Period.Date.Start                  &lt;fct&gt; 01/01/2016, 01/01/2016, 01/01…
+## $ Time.Period.Date.End                    &lt;fct&gt; 12/31/2017, 12/31/2017, 12/31…
+## $ Count.of.Maternal.Stays.with.Opioid.Use &lt;dbl&gt; 18, 108, 30, NA, 47, 63, 107,…
+## $ Type.of.Count                           &lt;fct&gt; Number of maternal hospital s…
+## $ Rate.of.Maternal.Stays.with.Opioid.Use  &lt;dbl&gt; 20.6, 28.8, 23.1, 7.8, 75.8, …
+## $ Type.of.Rate                            &lt;fct&gt; Rate of maternal hospital sta…
+## $ New.Georeferenced.Column                &lt;fct&gt; POINT (-78.4911647381 40.0073…
+## $ Sales                                   &lt;int&gt; 3787533, 37280253, 5105295, 4…
+## $ Latitude                                &lt;dbl&gt; 40.00738, 40.91083, 39.97146,…
+## $ Longitude                               &lt;dbl&gt; -78.49116, -79.91712, -79.031…
+## $ Georeferenced.County.location           &lt;fct&gt; POINT (-78.49116474 40.007375…
+## $ LostWages                               &lt;dbl&gt; 14648532, 159329502, 25420058…
+## $ LostTax                                 &lt;dbl&gt; 449709.9, 4891415.7, 780395.8…</code></pre>
+<pre class="r"><code>full &lt;- onlycounty</code></pre>
+<p>I first made a new dataset called newWine that only had the amount of alcohol sold during 2016-2017 to keep it consistent with the other data. I did a pivot_wider to split the years of the original function to show that I can do the function. A new dataset called newWage was created to combine the total amount of tax and wage lost over 2016 and 2017. I pivoted_longer wage and combined total wage lost and total tax lost to show I could use the function. I then combined maternal with newWine with left_join and formed a new dataset called joined. I then created a new dataset called compjoin that combined joined with newWage. I then removed the row that contained COMMONWEALTH and created a dataset called onlycounty. I did this because that row contained sum of all the counties. I removed several variables that were redundant.</p>
+<p>I did left_join because all the datasets had the same amount of rows. I capitalized all the county names in the datasets that were using sentence case. I did two left_joins because I had three datasets. I did not experience any dropped rows.</p>
+<pre class="r"><code>##mutated a variable and selected
+mfull &lt;- full %&gt;% select(-contains(&quot;Type.of.Count&quot;)) %&gt;% mutate(Percentage.of.Maternal.Stays.with.Opioid.Use=(Rate.of.Maternal.Stays.with.Opioid.Use/1000)*100) %&gt;% select(-contains(&quot;Georeferenced.County.location&quot;)) 
+mfull &lt;- mfull %&gt;% select(-contains(&quot;New.Georeferenced.Column&quot;)) 
+mfull %&gt;%filter(Latitude &lt; 40.9193135008 &amp; Longitude &lt; (-77.8250011212)) %&gt;% transmute( County=County,LostWages=LostWages)%&gt;% arrange(desc(LostWages))</code></pre>
+<pre><code>##          County  LostWages
+## 1     ALLEGHENY 1317281864
+## 2  WESTMORELAND  301085114
+## 3    WASHINGTON  195842966
+## 4        BUTLER  159329502
+## 5        BEAVER  150221406
+## 6       CAMBRIA  111308104
+## 7       FAYETTE   91321038
+## 8         BLAIR   43166882
+## 9       INDIANA   35969781
+## 10    ARMSTRONG   28455504
+## 11     SOMERSET   25420058
+## 12       GREENE   16695601
+## 13   HUNTINGDON   16333248
+## 14      BEDFORD   14648532
+## 15       FULTON         NA</code></pre>
+<pre class="r"><code>mfull &lt;- mfull %&gt;% mutate(LatCat=ifelse(Latitude&gt; 40.9193135008,&quot;North&quot;,&quot;South&quot;)) 
+Ewdat &lt;- mfull %&gt;% mutate(LongCat=ifelse(Longitude &lt; (-77.8250011212) , &quot;West&quot;,&quot;East&quot;))
+Ewdat$Direction &lt;- paste(Ewdat$LatCat,Ewdat$LongCat,sep = &quot;&quot;)
+Complete &lt;- Ewdat %&gt;% select(-contains(&quot;LatCat&quot;)) %&gt;% select(-contains(&quot;LongCat&quot;))
+Geodat &lt;-Complete %&gt;% group_by(Direction) %&gt;% summarize(mean_lost_tax=mean(LostTax,na.rm=T)) 
+head(Geodat)</code></pre>
+<pre><code>## # A tibble: 4 x 2
+##   Direction mean_lost_tax
+##   &lt;chr&gt;             &lt;dbl&gt;
+## 1 NorthEast      1306391.
+## 2 NorthWest       916155.
+## 3 SouthEast      7398215.
+## 4 SouthWest      5497667.</code></pre>
+<pre class="r"><code>Complete &lt;- Complete %&gt;% select(-contains(&quot;State.FIPS.Code&quot;)) %&gt;% select(-contains(&quot;Type.of.Rate&quot;)) %&gt;% select(-contains(&quot;Time.Period&quot;)) %&gt;% select(-contains(&quot;Time.Period.Date.Start&quot;)) %&gt;% select(-contains(&quot;Time.Period.Date.End&quot;)) %&gt;% select(-contains(&quot;Latitude.Longitude&quot;)) %&gt;% select(-contains(&quot;County.FIPS.Code&quot;)) %&gt;% select(-contains(&quot;County.Code.Number&quot;))</code></pre>
+<p>In this part, I did some more tidying and wrangling. I created a new numeric variable for the dataset called Percentage of Maternal Stays with Opioid use. This variable represents the percent of women that had issues with opiods in terms of total stays. I also created a new categorical variable called Direction. This variable describes which part of the state the county is in. I did this by using longitude and latitude. I selected the longitude and latitude of the center county and based my directions off of that. I also removed extraneous variables and created the dataset Complete which will be used for more summary</p>
+<p>I also did a filter and a transmute function that contains the counties with with latitude below 40.9193135008 and longitude -77.8250011212, and arranged it by lost wages. ALLEGHENY lost the most wages due to premature death. I also created a new dataset called Geodat that shows in which region on average the most tax was lost. The Southeast had the most lost tax on average.</p>
+<pre><code>## # A tibble: 6 x 6
+##   Category                          Mean   Median   Minumum    Maximum        SD
+##   &lt;chr&gt;                            &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;
+## 1 Count.of.Maternal.Stays.wi…     8.60e1   6.15e1   1.20e+1     7.48e2    1.10e2
+## 2 Rate.of.Maternal.Stays.wit…     2.09e1   1.83e1   2.80e+0     7.58e1    1.30e1
+## 3 Sales                           3.29e7   8.98e6   4.50e+5     3.00e8    5.79e7
+## 4 LostWages                       1.37e8   3.60e7   3.83e+6     1.73e9    2.81e8
+## 5 LostTax                         4.19e6   1.10e6   1.18e+5     5.31e7    8.64e6
+## 6 Percentage.of.Maternal.Sta…     2.09e0   1.83e0   2.80e-1     7.58e0    1.30e0</code></pre>
+<pre><code>## # A tibble: 6 x 4
+##   Direction Stat   Category     Value
+##   &lt;chr&gt;     &lt;chr&gt;  &lt;chr&gt;        &lt;dbl&gt;
+## 1 NorthEast mean   LostWage 42553450.
+## 2 NorthEast median LostWage 18522129.
+## 3 NorthEast sd     LostWage 52712011.
+## 4 NorthEast se     LostWage 12784541.
+## 5 NorthEast mean   LostTax   1306391.
+## 6 NorthEast median LostTax    568629.</code></pre>
+<pre><code>## [1] 21</code></pre>
+<pre><code>## [1] 1.332539e+14</code></pre>
+<pre><code>## # A tibble: 1 x 5
+##   Direction Rate.of.Maternal.Stays.with.Opioid… Sales_Q3 LostWages_Q3 LostTax_Q3
+##   &lt;chr&gt;                                   &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;      &lt;dbl&gt;
+## 1 SouthEast                                19.7 80412846   230424348.   7074028.</code></pre>
+<p>I first took the mean, median, minimum, SD of each of the variables across all the regions. I then took the mean,median, sd, and se across each of the four regions. We can see that SE lost the most tax and wage on average. The Northwest had the highest average rate of maternal stays with hospital stays. The SE had the most alcohol sales. I also took summary stats with two categories; counties in the SE. There are 21 counties in the SE and the variance for the LostTax is $1.332539e+14.</p>
+<p>I also looked at the 3rd quantile for the SE. The rate of maternal stays with opioid use was 19.7, the Sales of alcohol was 80412846 dollars , the lost wage was 230424348 dollars, and the lost tax was 7074028.</p>
+<p><img src="/project1_files/figure-html/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Here we can see the heatmap, and the correlations. Sales of alchol is positively correlated with the number of maternal stays with opioid use, lost tax, and lost wages. It is negatively correlated with percentage and the rate of maternal stays with opioid use. Rate of maternal stays is negatively correlated with everything except for percentage of maternal stays. Percentage of maternal stays has the same relationships as rate. Lost wages is negatively correlated with percentage of maternal stays and rate of maternal stays. Lost Tax has the same correlation. Count of maternal stays has no correlation with percent and rate.</p>
+<p><img src="/project1_files/figure-html/plots-1.png" width="672" style="display: block; margin: auto;" /><img src="/project1_files/figure-html/plots-2.png" width="672" style="display: block; margin: auto;" />
+The first graph shows a positive correlation between number of maternal stays with opioid use and the sales of spirits of wine. I colored this graph by county. The second graph looks at the amount of lost wages per region. From the graph we can see that the SouthEast had the most lost wages, with Philadelphia county in the lead.</p>
+<pre class="r"><code>complete8&lt;- Complete %&gt;% na.omit
+
+po &lt;- Complete %&gt;% na.omit %&gt;% select(-County,-Direction,-Latitude,-Longitude)
+
+po_nums &lt;- po%&gt;% select_if(is.numeric) %&gt;% scale
+
+rownames(po_nums)&lt;-complete8$County 
+
+
+po_pca &lt;- princomp(po_nums)
+names(po_pca)</code></pre>
+<pre><code>## [1] &quot;sdev&quot;     &quot;loadings&quot; &quot;center&quot;   &quot;scale&quot;    &quot;n.obs&quot;    &quot;scores&quot;   &quot;call&quot;</code></pre>
+<pre class="r"><code>summary(po_pca, loadings = T)</code></pre>
+<pre><code>## Importance of components:
+##                           Comp.1    Comp.2     Comp.3      Comp.4       Comp.5
+## Standard deviation     1.9595932 1.3798051 0.33923093 0.145102293 1.864514e-08
+## Proportion of Variance 0.6530622 0.3237861 0.01957102 0.003580727 5.912269e-17
+## Cumulative Proportion  0.6530622 0.9768482 0.99641927 1.000000000 1.000000e+00
+##                        Comp.6
+## Standard deviation          0
+## Proportion of Variance      0
+## Cumulative Proportion       1
+## 
+## Loadings:
+##                                              Comp.1 Comp.2 Comp.3 Comp.4 Comp.5
+## Count.of.Maternal.Stays.with.Opioid.Use       0.466  0.221  0.633  0.577       
+## Rate.of.Maternal.Stays.with.Opioid.Use       -0.156  0.682               -0.707
+## Sales                                         0.487        -0.759  0.433       
+## LostWages                                     0.499  0.101        -0.489       
+## LostTax                                       0.499  0.101        -0.489       
+## Percentage.of.Maternal.Stays.with.Opioid.Use -0.156  0.682                0.707
+##                                              Comp.6
+## Count.of.Maternal.Stays.with.Opioid.Use            
+## Rate.of.Maternal.Stays.with.Opioid.Use             
+## Sales                                              
+## LostWages                                     0.707
+## LostTax                                      -0.707
+## Percentage.of.Maternal.Stays.with.Opioid.Use</code></pre>
+<pre class="r"><code>eigval&lt;-po_pca$sdev^2
+
+varprop=round(eigval/sum(eigval),2)
+
+ggplot() + geom_bar(aes(y=varprop, x=1:6), stat=&quot;identity&quot;) + xlab(&quot;&quot;) + geom_path(aes(y=varprop, x=1:6)) + 
+  geom_text(aes(x=1:6, y=varprop, label=round(varprop, 2)), vjust=1, col=&quot;white&quot;, size=5) + 
+  scale_y_continuous(breaks=seq(0, .8, .2), labels = scales::percent) + scale_x_continuous(breaks=1:10)</code></pre>
+<p><img src="/project1_files/figure-html/PCA-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>round(cumsum(eigval)/sum(eigval),2) </code></pre>
+<pre><code>## Comp.1 Comp.2 Comp.3 Comp.4 Comp.5 Comp.6 
+##   0.65   0.98   1.00   1.00   1.00   1.00</code></pre>
+<pre class="r"><code>eigval</code></pre>
+<pre><code>##       Comp.1       Comp.2       Comp.3       Comp.4       Comp.5       Comp.6 
+## 3.840005e+00 1.903862e+00 1.150776e-01 2.105468e-02 3.476414e-16 0.000000e+00</code></pre>
+<pre class="r"><code>podf&lt;-data.frame(PC1=po_pca$scores[,1], PC2=po_pca$scores[,2]) 
+
+
+ggplot(podf,aes(PC1, PC2))+geom_point()</code></pre>
+<p><img src="/project1_files/figure-html/PCA-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>Name&lt;- complete8$County
+
+
+po_pca$loadings[1:6,1:4]%&gt;%as.data.frame%&gt;%tibble::rownames_to_column()%&gt;% ggplot()+geom_hline(aes(yintercept=0),lty=2)+
+geom_vline(aes(xintercept=0),lty=2)+ylab(&quot;PC2&quot;)+xlab(&quot;PC1&quot;)+ geom_segment(aes(x=0,y=0,xend=Comp.1,yend=Comp.2),arrow=arrow(),col=&quot;red&quot;)+ geom_label(aes(x=Comp.1*.9,y=Comp.2+.1,label=rowname))</code></pre>
+<p><img src="/project1_files/figure-html/PCA-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>po_pca$score%&gt;%as.data.frame%&gt;%cbind(Name,.)%&gt;%top_n(3,Comp.1)</code></pre>
+<pre><code>##         Name    Comp.1     Comp.2     Comp.3      Comp.4        Comp.5
+## 1 MONTGOMERY  4.136251 -0.9016471 -1.6070490  0.04076411 -2.442491e-15
+## 2      BUCKS  2.950715  0.5158250 -0.5398987  0.25578183 -2.456368e-15
+## 3  ALLEGHENY 10.524610  2.9283948  0.7320495 -0.03878174  1.998401e-15
+##          Comp.6
+## 1 -2.849541e-11
+## 2 -8.358596e-11
+## 3 -2.474390e-11</code></pre>
+<pre class="r"><code>complete8%&gt;%filter(County%in%c(&quot;ELK&quot;,&quot;VENANGO&quot;,&quot;ARMSTRONG&quot;))</code></pre>
+<pre><code>##      County Count.of.Maternal.Stays.with.Opioid.Use
+## 1       ELK                                      47
+## 2   VENANGO                                      53
+## 3 ARMSTRONG                                      60
+##   Rate.of.Maternal.Stays.with.Opioid.Use   Sales Latitude Longitude LostWages
+## 1                                   75.8 2798137 41.42819 -78.64948  12254081
+## 2                                   51.8 4841983 41.40341 -79.76287  15580614
+## 3                                   51.6 4661284 40.81509 -79.47317  28455504
+##    LostTax Percentage.of.Maternal.Stays.with.Opioid.Use Direction
+## 1 376200.3                                         7.58 NorthWest
+## 2 478324.8                                         5.18 NorthWest
+## 3 873584.0                                         5.16 SouthWest</code></pre>
+<pre class="r"><code>po_pca$scores%&gt;%as.data.frame%&gt;%cbind(Name,.)%&gt;%top_n(3,wt=desc(Comp.1))</code></pre>
+<pre><code>##        Name    Comp.1   Comp.2     Comp.3       Comp.4        Comp.5
+## 1       ELK -2.295631 5.268051 -0.5971120 -0.123921338  3.108624e-15
+## 2   VENANGO -1.660857 2.762309 -0.2218343  0.007236599  1.088019e-14
+## 3 ARMSTRONG -1.567311 2.767568 -0.1709643 -0.016316040 -9.325873e-15
+##          Comp.6
+## 1  1.706370e-10
+## 2  8.455516e-10
+## 3 -8.300449e-10</code></pre>
+<pre class="r"><code>complete8%&gt;%filter(County%in%c(&quot;MONTGOMERY&quot;,&quot;BUCKS&quot;,&quot;ALLEGHENY&quot;))</code></pre>
+<pre><code>##       County Count.of.Maternal.Stays.with.Opioid.Use
+## 1 MONTGOMERY                                     167
+## 2      BUCKS                                     229
+## 3  ALLEGHENY                                     748
+##   Rate.of.Maternal.Stays.with.Opioid.Use     Sales Latitude Longitude
+## 1                                    9.4 222293222 40.20990 -75.37252
+## 2                                   22.9 150121813 40.33501 -75.11291
+## 3                                   27.4 300167811 40.46735 -79.98620
+##    LostWages  LostTax Percentage.of.Maternal.Stays.with.Opioid.Use Direction
+## 1  532391727 16344426                                         0.94 SouthEast
+## 2  425210380 13053959                                         2.29 SouthEast
+## 3 1317281864 40440553                                         2.74 SouthWest</code></pre>
+<pre class="r"><code>po_pca$scores%&gt;%as.data.frame%&gt;%cbind(Name,.)%&gt;%top_n(3,wt=Comp.2)</code></pre>
+<pre><code>##         Name    Comp.1   Comp.2     Comp.3      Comp.4       Comp.5
+## 1        ELK -2.295631 5.268051 -0.5971120 -0.12392134 3.108624e-15
+## 2  ALLEGHENY 10.524610 2.928395  0.7320495 -0.03878174 1.998401e-15
+## 3 CLEARFIELD -1.512714 3.060837 -0.1364718  0.10299116 2.886580e-15
+##          Comp.6
+## 1  1.706370e-10
+## 2 -2.474390e-11
+## 3  1.826258e-10</code></pre>
+<pre class="r"><code>complete8%&gt;%filter(County%in%c(&quot;ELK&quot;,&quot;ALLEGHENY&quot;,&quot;CLEARFIELD&quot;))</code></pre>
+<pre><code>##       County Count.of.Maternal.Stays.with.Opioid.Use
+## 1        ELK                                      47
+## 2  ALLEGHENY                                     748
+## 3 CLEARFIELD                                      80
+##   Rate.of.Maternal.Stays.with.Opioid.Use     Sales Latitude Longitude
+## 1                                   75.8   2798137 41.42819 -78.64948
+## 2                                   27.4 300167811 40.46735 -79.98620
+## 3                                   54.0   7922397 41.00043 -78.47558
+##    LostWages    LostTax Percentage.of.Maternal.Stays.with.Opioid.Use Direction
+## 1   12254081   376200.3                                         7.58 NorthWest
+## 2 1317281864 40440553.2                                         2.74 SouthWest
+## 3   28454568   873555.2                                         5.40 NorthWest</code></pre>
+<pre class="r"><code>po_pca$scores%&gt;%as.data.frame%&gt;%cbind(Name,.)%&gt;%top_n(3,wt=desc(Comp.2))</code></pre>
+<pre><code>##         Name     Comp.1    Comp.2      Comp.3      Comp.4        Comp.5
+## 1     CENTRE -0.2013318 -1.607875 -0.06417652 -0.13816042 -4.329870e-15
+## 2 CUMBERLAND  0.2656337 -1.527977 -0.11789986 -0.04763598 -7.660539e-15
+## 3     LEHIGH  0.9931442 -1.534367 -0.38270920 -0.01255652 -1.065814e-14
+##          Comp.6
+## 1 -3.784167e-10
+## 2 -6.132437e-10
+## 3 -8.204040e-10</code></pre>
+<pre class="r"><code>complete8%&gt;%filter(County%in%c(&quot;CENTRE&quot;,&quot;CUMBERLAND&quot;,&quot;LEHIGH&quot;))</code></pre>
+<pre><code>##       County Count.of.Maternal.Stays.with.Opioid.Use
+## 1     CENTRE                                      23
+## 2 CUMBERLAND                                      51
+## 3     LEHIGH                                      72
+##   Rate.of.Maternal.Stays.with.Opioid.Use    Sales Latitude Longitude LostWages
+## 1                                   10.0 30407219 40.91931 -77.82500  92657893
+## 2                                    9.8 47971374 40.16760 -77.26866 133744192
+## 3                                    8.6 80412846 40.61465 -75.60099 204253844
+##   LostTax Percentage.of.Maternal.Stays.with.Opioid.Use Direction
+## 1 2844597                                         1.00 NorthEast
+## 2 4105947                                         0.98 SouthEast
+## 3 6270593                                         0.86 SouthEast</code></pre>
+<p>I did PCA analysis on my data. After obtaining the scree plot I decided to keep PC 1 and PC2 as they both had eigen values of over 1. I then plotted them on a scatter plot and then made a loadings plot to better see the data. From the data we can see that a high score on PCA1 means that a high percentage of maternal stays with opioid use, but a mid-low overall of the other variables. A low score on PCA 1 means that percentage of maternal stays with opioid use is low, but the count is very high. For PCA 2, a high score means high sales of alcohol, high lost taxes and wages, and a middle-low amount of percentage of mother stays with opioid use. A low score on PCA2 means a very low percentage of mother stays with opioid use, and a middle-low amount of everything else.</p>
+<p>I think it is interesting that rate and percentage of maternal stays with opioid use is not together. This leads to percentage being poorly correlated with everything. Based on the loadings graph, there is correlation between sales of alcohol, count of maternal stays with opioid use, lost wages, and sales. These are all negatively correlated with percentage of maternal stays with opiod use.</p>
+
+              <hr>
+              <div class="related-posts">
+                <h5>Related Posts</h5>
+                
+              </div>
+            </div>
+          </div>
+          <hr>
+        <div class="disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+
+    (function() {
+      
+      
+      if (window.location.hostname == "localhost")
+        return;
+
+      var disqus_shortname = '';
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+        </div>
+      </div>
+      
+    </div>
+
+    
+    <footer>
+  <div id="footer">
+    <div class="container">
+      <p class="text-muted">&copy; All rights reserved. Powered by <a href="https://gohugo.io/">Hugo</a> and
+      <a href="http://www.github.com/nurlansu/hugo-sustain/">sustain</a> with ♥</p>
+    </div>
+  </div>
+</footer>
+<div class="footer"></div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/js/docs.min.js"></script>
+<script src="/js/main.js"></script>
+
+<script src="/js/ie10-viewport-bug-workaround.js"></script>
+
+
+    
+  </body>
+</html>

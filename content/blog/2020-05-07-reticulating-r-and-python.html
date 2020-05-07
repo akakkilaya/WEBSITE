@@ -1,0 +1,184 @@
+---
+title: Combining a passion for literature, research, and python
+author: Akash Kakkilaya
+date: '2020-05-07'
+slug: reticulating-r-and-python
+categories: []
+tags: []
+description: ''
+---
+
+
+
+<p>In this blog post, I combine my passion for literature, research, and data science. I began reading classic books, and one of my favorite was Moby Dick by Herman Melville. In the code block below, I have created a string of the opening paragraph of the book. I then took out all the punctuation marks with re.sub() and replaced them with spaces. I then made the string into a list of lower case words. I then did a count function to calculate how many times each word appears in the list.</p>
+<div class="figure">
+<img src="/blog/2020-05-07-reticulating-r-and-python_files/mobydick.png" alt="Moby Dick" />
+<p class="caption">Moby Dick</p>
+</div>
+<pre class="python"><code>
+
+string6=&quot;Call me Ishmael. Some years ago — never mind how long precisely — having little or no money in my purse, and nothing particular to interest me on shore, I thought I would sail about a little and see the watery part of the world. It is a way I have of driving off the spleen, and regulating the circulation. Whenever I find myself growing grim about the mouth; whenever it is a damp, drizzly November in my soul; whenever I find myself involuntarily pausing before coffin warehouses, and bringing up the rear of every funeral I meet; and especially whenever my hypos get such an upper hand of me, that it requires a strong moral principle to prevent me from deliberately stepping into the street, and methodically knocking people’s hats off — then, I account it high time to get to sea as soon as I can. This is my substitute for pistol and ball. With a philosophical flourish Cato throws himself upon his sword; I quietly take to the ship. There is nothing surprising in this. If they but knew it, almost all men in their degree, some time or other, cherish very nearly the same feelings towards the ocean with me.&quot;
+
+import re
+string7=re.sub(&quot;[.-;]&quot;,&quot;&quot;,string6)
+words=re.split(r&#39;\s&#39;,string7)
+List=[]
+for word in words:
+    List.append(word.lower())
+print(List)</code></pre>
+<pre><code>## [&#39;call&#39;, &#39;me&#39;, &#39;ishmael&#39;, &#39;some&#39;, &#39;years&#39;, &#39;ago&#39;, &#39;—&#39;, &#39;never&#39;, &#39;mind&#39;, &#39;how&#39;, &#39;long&#39;, &#39;precisely&#39;, &#39;—&#39;, &#39;having&#39;, &#39;little&#39;, &#39;or&#39;, &#39;no&#39;, &#39;money&#39;, &#39;in&#39;, &#39;my&#39;, &#39;purse,&#39;, &#39;and&#39;, &#39;nothing&#39;, &#39;particular&#39;, &#39;to&#39;, &#39;interest&#39;, &#39;me&#39;, &#39;on&#39;, &#39;shore,&#39;, &#39;i&#39;, &#39;thought&#39;, &#39;i&#39;, &#39;would&#39;, &#39;sail&#39;, &#39;about&#39;, &#39;a&#39;, &#39;little&#39;, &#39;and&#39;, &#39;see&#39;, &#39;the&#39;, &#39;watery&#39;, &#39;part&#39;, &#39;of&#39;, &#39;the&#39;, &#39;world&#39;, &#39;it&#39;, &#39;is&#39;, &#39;a&#39;, &#39;way&#39;, &#39;i&#39;, &#39;have&#39;, &#39;of&#39;, &#39;driving&#39;, &#39;off&#39;, &#39;the&#39;, &#39;spleen,&#39;, &#39;and&#39;, &#39;regulating&#39;, &#39;the&#39;, &#39;circulation&#39;, &#39;whenever&#39;, &#39;i&#39;, &#39;find&#39;, &#39;myself&#39;, &#39;growing&#39;, &#39;grim&#39;, &#39;about&#39;, &#39;the&#39;, &#39;mouth&#39;, &#39;whenever&#39;, &#39;it&#39;, &#39;is&#39;, &#39;a&#39;, &#39;damp,&#39;, &#39;drizzly&#39;, &#39;november&#39;, &#39;in&#39;, &#39;my&#39;, &#39;soul&#39;, &#39;whenever&#39;, &#39;i&#39;, &#39;find&#39;, &#39;myself&#39;, &#39;involuntarily&#39;, &#39;pausing&#39;, &#39;before&#39;, &#39;coffin&#39;, &#39;warehouses,&#39;, &#39;and&#39;, &#39;bringing&#39;, &#39;up&#39;, &#39;the&#39;, &#39;rear&#39;, &#39;of&#39;, &#39;every&#39;, &#39;funeral&#39;, &#39;i&#39;, &#39;meet&#39;, &#39;and&#39;, &#39;especially&#39;, &#39;whenever&#39;, &#39;my&#39;, &#39;hypos&#39;, &#39;get&#39;, &#39;such&#39;, &#39;an&#39;, &#39;upper&#39;, &#39;hand&#39;, &#39;of&#39;, &#39;me,&#39;, &#39;that&#39;, &#39;it&#39;, &#39;requires&#39;, &#39;a&#39;, &#39;strong&#39;, &#39;moral&#39;, &#39;principle&#39;, &#39;to&#39;, &#39;prevent&#39;, &#39;me&#39;, &#39;from&#39;, &#39;deliberately&#39;, &#39;stepping&#39;, &#39;into&#39;, &#39;the&#39;, &#39;street,&#39;, &#39;and&#39;, &#39;methodically&#39;, &#39;knocking&#39;, &#39;people’s&#39;, &#39;hats&#39;, &#39;off&#39;, &#39;—&#39;, &#39;then,&#39;, &#39;i&#39;, &#39;account&#39;, &#39;it&#39;, &#39;high&#39;, &#39;time&#39;, &#39;to&#39;, &#39;get&#39;, &#39;to&#39;, &#39;sea&#39;, &#39;as&#39;, &#39;soon&#39;, &#39;as&#39;, &#39;i&#39;, &#39;can&#39;, &#39;this&#39;, &#39;is&#39;, &#39;my&#39;, &#39;substitute&#39;, &#39;for&#39;, &#39;pistol&#39;, &#39;and&#39;, &#39;ball&#39;, &#39;with&#39;, &#39;a&#39;, &#39;philosophical&#39;, &#39;flourish&#39;, &#39;cato&#39;, &#39;throws&#39;, &#39;himself&#39;, &#39;upon&#39;, &#39;his&#39;, &#39;sword&#39;, &#39;i&#39;, &#39;quietly&#39;, &#39;take&#39;, &#39;to&#39;, &#39;the&#39;, &#39;ship&#39;, &#39;there&#39;, &#39;is&#39;, &#39;nothing&#39;, &#39;surprising&#39;, &#39;in&#39;, &#39;this&#39;, &#39;if&#39;, &#39;they&#39;, &#39;but&#39;, &#39;knew&#39;, &#39;it,&#39;, &#39;almost&#39;, &#39;all&#39;, &#39;men&#39;, &#39;in&#39;, &#39;their&#39;, &#39;degree,&#39;, &#39;some&#39;, &#39;time&#39;, &#39;or&#39;, &#39;other,&#39;, &#39;cherish&#39;, &#39;very&#39;, &#39;nearly&#39;, &#39;the&#39;, &#39;same&#39;, &#39;feelings&#39;, &#39;towards&#39;, &#39;the&#39;, &#39;ocean&#39;, &#39;with&#39;, &#39;me&#39;]</code></pre>
+<pre class="python"><code>def count_chars(List):
+    counts= {}
+    for c in List:
+        if c in counts:
+            counts[c]+=1
+        else:
+            counts[c]=1
+                
+    for c in counts:
+        print(c,&quot;appears&quot;,counts[c],&quot;times&quot;)
+count_chars(List)
+</code></pre>
+<pre><code>## call appears 1 times
+## me appears 4 times
+## ishmael appears 1 times
+## some appears 2 times
+## years appears 1 times
+## ago appears 1 times
+## — appears 3 times
+## never appears 1 times
+## mind appears 1 times
+## how appears 1 times
+## long appears 1 times
+## precisely appears 1 times
+## having appears 1 times
+## little appears 2 times
+## or appears 2 times
+## no appears 1 times
+## money appears 1 times
+## in appears 4 times
+## my appears 4 times
+## purse, appears 1 times
+## and appears 7 times
+## nothing appears 2 times
+## particular appears 1 times
+## to appears 5 times
+## interest appears 1 times
+## on appears 1 times
+## shore, appears 1 times
+## i appears 9 times
+## thought appears 1 times
+## would appears 1 times
+## sail appears 1 times
+## about appears 2 times
+## a appears 5 times
+## see appears 1 times
+## the appears 10 times
+## watery appears 1 times
+## part appears 1 times
+## of appears 4 times
+## world appears 1 times
+## it appears 4 times
+## is appears 4 times
+## way appears 1 times
+## have appears 1 times
+## driving appears 1 times
+## off appears 2 times
+## spleen, appears 1 times
+## regulating appears 1 times
+## circulation appears 1 times
+## whenever appears 4 times
+## find appears 2 times
+## myself appears 2 times
+## growing appears 1 times
+## grim appears 1 times
+## mouth appears 1 times
+## damp, appears 1 times
+## drizzly appears 1 times
+## november appears 1 times
+## soul appears 1 times
+## involuntarily appears 1 times
+## pausing appears 1 times
+## before appears 1 times
+## coffin appears 1 times
+## warehouses, appears 1 times
+## bringing appears 1 times
+## up appears 1 times
+## rear appears 1 times
+## every appears 1 times
+## funeral appears 1 times
+## meet appears 1 times
+## especially appears 1 times
+## hypos appears 1 times
+## get appears 2 times
+## such appears 1 times
+## an appears 1 times
+## upper appears 1 times
+## hand appears 1 times
+## me, appears 1 times
+## that appears 1 times
+## requires appears 1 times
+## strong appears 1 times
+## moral appears 1 times
+## principle appears 1 times
+## prevent appears 1 times
+## from appears 1 times
+## deliberately appears 1 times
+## stepping appears 1 times
+## into appears 1 times
+## street, appears 1 times
+## methodically appears 1 times
+## knocking appears 1 times
+## people’s appears 1 times
+## hats appears 1 times
+## then, appears 1 times
+## account appears 1 times
+## high appears 1 times
+## time appears 2 times
+## sea appears 1 times
+## as appears 2 times
+## soon appears 1 times
+## can appears 1 times
+## this appears 2 times
+## substitute appears 1 times
+## for appears 1 times
+## pistol appears 1 times
+## ball appears 1 times
+## with appears 2 times
+## philosophical appears 1 times
+## flourish appears 1 times
+## cato appears 1 times
+## throws appears 1 times
+## himself appears 1 times
+## upon appears 1 times
+## his appears 1 times
+## sword appears 1 times
+## quietly appears 1 times
+## take appears 1 times
+## ship appears 1 times
+## there appears 1 times
+## surprising appears 1 times
+## if appears 1 times
+## they appears 1 times
+## but appears 1 times
+## knew appears 1 times
+## it, appears 1 times
+## almost appears 1 times
+## all appears 1 times
+## men appears 1 times
+## their appears 1 times
+## degree, appears 1 times
+## other, appears 1 times
+## cherish appears 1 times
+## very appears 1 times
+## nearly appears 1 times
+## same appears 1 times
+## feelings appears 1 times
+## towards appears 1 times
+## ocean appears 1 times</code></pre>
+<p>The summer before my senior year, I worked at MD Anderson where I worked with plasmids and bacterial cultures. Plasmids are cut using restriction fragments that can target specific sequences within a larger sequence. Below, I have created an example of how one would calculate the number of cuts and fragments one would expect from using the following restriction fragments: ANTAAT and GCRWTG.</p>
+<pre class="python"><code>string5=&quot;ATGGCAATAACCCCCCGTTTCTACTTCTAGAGGAGAAAAGTATTGACATGAGCGCTCCCGGCACAAGGGCCAAAGAAGTCTCCAATTTCTTATTTCCGAATGACATGCGTCTCCTTGCGGGTAAATCACCGACCGCAATTCATAGAAGCCTGGGGGAACAGATAGGTCTAATTAGCTTAAGAGAGTAAATCCTGGGATCATTCAGTAGTAACCATAAACTTACGCTGGGGCTTCTTCGGCGGATTTTTACAGTTACCAACCAGGAGATTTGAAGTAAATCAGTTGAGGATTTAGCCGCGCTATCCGGTAATCTCCAAATTAAAACATACCGTTCCATGAAGGCTAGAATTACTTACCGGCCTTTTCCATGCCTGCGCTATACCCCCCCACTCTCCCGCTTATCCGTCCGAGCGGAGGCAGTGCGATCCTCCGTTAAGATATTCTTACGTGTGACGTAGCTATGTATTTTGCAGAGCTGGCGAACGCGTTGAACACTTCACAGATGGTAGGGATTCGGGTAAAGGGCGTATAATTGGGGACTAACATAGGCGTAGACTACGATGGCGCCAACTCAATCGCAGCTCGAGCGCCCTGAATAACGTACTCATCTCAACTCATTCTCGGCAATCTACCGAGCGACTCGATTATCAACGGCTGTCTAGCAGTTCTAATCTTTTGCCAGCATCGTAATAGCCTCCAAGAGATTGATGATAGCTATCGGCACAGAACTGAGACGGCGCCGATGGATAGCGGACTTTCGGTCAACCACAATTCCCCACGGGACAGGTCCTGCGGTGCGCATCACTCTGAATGTACAAGCAACCCAAGTGGGCCGAGCCTGGACTCAGCTGGTTCCTGCGTGAGCTCGAGACTCGGGATGACAGCTCTTTAAACATAGAGCGGGGGCGTCGAACGGTCGAGAAAGTCATAGTACCTCGGGTACCAACTTACTCAGGTTATTGCTTGAAGCTGTACTATTTTAGGGGGGGAGCGCTGAAGGTCTCTTCTTCTCATGACTGAACTCGCGAGGGTCGTGAAGTCGGTTCCTTCAATGGTTAAAAAACAAAGGCTTACTGTGCGCAGAGGAACGCCCATCTAGCGGCTGGCGTCTTGAATGCTCGGTCCCCTTTGTCATTCCGGATTAATCCATTTCCCTCATTCACGAGCTTGCGAAGTCTACATTGGTATATGAATGCGACCTAGAAGAGGGCGCTTAAAATTGGCAGTGGTTGATGCTCTAAACTCCATTTGGTTTACTCGTGCATCACCGCGATAGGCTGACAAAGGTTTAACATTGAATAGCAAGGCACTTCCGGTCTCAATGAACGGCCGGGAAAGGTACGCGCGCGGTATGGGAGGATCAAGGGGCCAATAGAGAGGCTCCTCTCTCACTCGCTAGGAGGCAAATGTAAAACAATGGTTACTGCATCGATACATAAAACATGTCCATCGGTTGCCCAAAGTGTTAAGTGTCTATCACCCCTAGGGCCGTTTCCCGCATATAAACGCCAGGTTGTATCCGCATTTGATGCTACCGTGGATGAGTCTGCGTCGAGCGCGCCGCACGAATGTTGCAATGTATTGCATGAGTAGGGTTGACTAAGAGCCGTTAGATGCGTCGCTGTACTAATAGTTGTCGACAGACCGTCGAGATTAGAAAATGGTACCAGCATTTTCGGAGGTTCTCTAACTAGTATGGATTGCGGTGTCTTCACTGTGCTGCGGCTACCCATCGCCTGAAATCCAGCTGGTGTCAAGCCATCCCCTCTCCGGGACGCCGCATGTAGTGAAACATATACGTTGCACGGGTTCACCGCGGTCCGTTCTGAGTCGACCAAGGACACAATCGAGCTCCGATCCGTACCCTCGACAAACTTGTACCCGACCCCCGGAGCTTGCCAGCTCCTCGGGTATCATGGAGCCTGTGGTTCATCGCGTCCGATATCAAACTTCGTCATGATAAAGTCCCCCCCTCGGGAGTACCAGAGAAGATGACTACTGAGTTGTGCGAT&quot;
+
+re.findall(r&quot;A.TAAT|GC[A|G][A|T]TG&quot;,string5)
+</code></pre>
+<pre><code>## [&#39;GCGTTG&#39;, &#39;ATTAAT&#39;, &#39;GCAATG&#39;, &#39;ACTAAT&#39;]</code></pre>

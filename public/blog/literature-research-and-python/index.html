@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Akash Kakkilaya" />
+    <meta name="description" content="Describe your website">
+    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico">
+    <title>Literature, Research and Python</title>
+    <meta name="generator" content="Hugo 0.70.0" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,200bold,400old" />
+    
+    <!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+    
+  </head>
+
+  <body>
+    <div id="wrap">
+
+      
+      <nav class="navbar navbar-default">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/"><i class="fa fa-home"></i></a>
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div class="navbar-collapse collapse" id="navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+        <li><a href="/blog/">BLOG</a></li>
+        
+        <li><a href="/projects/">PROJECTS</a></li>
+        
+        <li><a href="/resume/">RESUME</a></li>
+        
+      
+      </ul>
+    </div>
+  </div>
+</nav>
+
+      
+      <div class="container">
+        <div class="blog-post">
+          <h3>
+            <strong><a href="/blog/literature-research-and-python/">Literature, Research and Python</a></strong>
+          </h3>
+        </div>
+        <div class="blog-title">
+          <h4>
+          May 7, 2020
+            &nbsp;&nbsp;
+            
+          </h4>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="blogpost">
+              <p>In this blog post, I combine my passion for literature, research, and data science. I began reading classic books, and one of my favorite was Moby Dick by Herman Melville. In the code block below, I have created a string of the opening paragraph of the book. I then took out all the punctuation marks with re.sub() and replaced them with spaces. I then made the string into a list of lower case words. I then did a count function to calculate how many times each word appears in the list.</p>
+<p><img src="/Users/Akash/Desktop/Website/static/img/mobydick.png" alt=""></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
+
+string6<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Call me Ishmael. Some years ago — never mind how long precisely — having little or no money in my purse, and nothing particular to interest me on shore, I thought I would sail about a little and see the watery part of the world. It is a way I have of driving off the spleen, and regulating the circulation. Whenever I find myself growing grim about the mouth; whenever it is a damp, drizzly November in my soul; whenever I find myself involuntarily pausing before coffin warehouses, and bringing up the rear of every funeral I meet; and especially whenever my hypos get such an upper hand of me, that it requires a strong moral principle to prevent me from deliberately stepping into the street, and methodically knocking people’s hats off — then, I account it high time to get to sea as soon as I can. This is my substitute for pistol and ball. With a philosophical flourish Cato throws himself upon his sword; I quietly take to the ship. There is nothing surprising in this. If they but knew it, almost all men in their degree, some time or other, cherish very nearly the same feelings towards the ocean with me.&#34;</span>
+
+<span style="color:#f92672">import</span> re
+string7<span style="color:#f92672">=</span>re<span style="color:#f92672">.</span>sub(<span style="color:#e6db74">&#34;[.-;]&#34;</span>,<span style="color:#e6db74">&#34;&#34;</span>,string6)
+words<span style="color:#f92672">=</span>re<span style="color:#f92672">.</span>split(<span style="color:#e6db74">r</span><span style="color:#e6db74">&#39;\s&#39;</span>,string7)
+List<span style="color:#f92672">=</span>[]
+<span style="color:#66d9ef">for</span> word <span style="color:#f92672">in</span> words:
+    List<span style="color:#f92672">.</span>append(word<span style="color:#f92672">.</span>lower())
+<span style="color:#66d9ef">print</span>(List)
+</code></pre></div><pre><code>## ['call', 'me', 'ishmael', 'some', 'years', 'ago', '—', 'never', 'mind', 'how', 'long', 'precisely', '—', 'having', 'little', 'or', 'no', 'money', 'in', 'my', 'purse,', 'and', 'nothing', 'particular', 'to', 'interest', 'me', 'on', 'shore,', 'i', 'thought', 'i', 'would', 'sail', 'about', 'a', 'little', 'and', 'see', 'the', 'watery', 'part', 'of', 'the', 'world', 'it', 'is', 'a', 'way', 'i', 'have', 'of', 'driving', 'off', 'the', 'spleen,', 'and', 'regulating', 'the', 'circulation', 'whenever', 'i', 'find', 'myself', 'growing', 'grim', 'about', 'the', 'mouth', 'whenever', 'it', 'is', 'a', 'damp,', 'drizzly', 'november', 'in', 'my', 'soul', 'whenever', 'i', 'find', 'myself', 'involuntarily', 'pausing', 'before', 'coffin', 'warehouses,', 'and', 'bringing', 'up', 'the', 'rear', 'of', 'every', 'funeral', 'i', 'meet', 'and', 'especially', 'whenever', 'my', 'hypos', 'get', 'such', 'an', 'upper', 'hand', 'of', 'me,', 'that', 'it', 'requires', 'a', 'strong', 'moral', 'principle', 'to', 'prevent', 'me', 'from', 'deliberately', 'stepping', 'into', 'the', 'street,', 'and', 'methodically', 'knocking', 'people’s', 'hats', 'off', '—', 'then,', 'i', 'account', 'it', 'high', 'time', 'to', 'get', 'to', 'sea', 'as', 'soon', 'as', 'i', 'can', 'this', 'is', 'my', 'substitute', 'for', 'pistol', 'and', 'ball', 'with', 'a', 'philosophical', 'flourish', 'cato', 'throws', 'himself', 'upon', 'his', 'sword', 'i', 'quietly', 'take', 'to', 'the', 'ship', 'there', 'is', 'nothing', 'surprising', 'in', 'this', 'if', 'they', 'but', 'knew', 'it,', 'almost', 'all', 'men', 'in', 'their', 'degree,', 'some', 'time', 'or', 'other,', 'cherish', 'very', 'nearly', 'the', 'same', 'feelings', 'towards', 'the', 'ocean', 'with', 'me']
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">count_chars</span>(List):
+    counts<span style="color:#f92672">=</span> {}
+    <span style="color:#66d9ef">for</span> c <span style="color:#f92672">in</span> List:
+        <span style="color:#66d9ef">if</span> c <span style="color:#f92672">in</span> counts:
+            counts[c]<span style="color:#f92672">+=</span><span style="color:#ae81ff">1</span>
+        <span style="color:#66d9ef">else</span>:
+            counts[c]<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
+                
+    <span style="color:#66d9ef">for</span> c <span style="color:#f92672">in</span> counts:
+        <span style="color:#66d9ef">print</span>(c,<span style="color:#e6db74">&#34;appears&#34;</span>,counts[c],<span style="color:#e6db74">&#34;times&#34;</span>)
+count_chars(List)
+
+</code></pre></div><pre><code>## call appears 1 times
+## me appears 4 times
+## ishmael appears 1 times
+## some appears 2 times
+## years appears 1 times
+## ago appears 1 times
+## — appears 3 times
+## never appears 1 times
+## mind appears 1 times
+## how appears 1 times
+## long appears 1 times
+## precisely appears 1 times
+## having appears 1 times
+## little appears 2 times
+## or appears 2 times
+## no appears 1 times
+## money appears 1 times
+## in appears 4 times
+## my appears 4 times
+## purse, appears 1 times
+## and appears 7 times
+## nothing appears 2 times
+## particular appears 1 times
+## to appears 5 times
+## interest appears 1 times
+## on appears 1 times
+## shore, appears 1 times
+## i appears 9 times
+## thought appears 1 times
+## would appears 1 times
+## sail appears 1 times
+## about appears 2 times
+## a appears 5 times
+## see appears 1 times
+## the appears 10 times
+## watery appears 1 times
+## part appears 1 times
+## of appears 4 times
+## world appears 1 times
+## it appears 4 times
+## is appears 4 times
+## way appears 1 times
+## have appears 1 times
+## driving appears 1 times
+## off appears 2 times
+## spleen, appears 1 times
+## regulating appears 1 times
+## circulation appears 1 times
+## whenever appears 4 times
+## find appears 2 times
+## myself appears 2 times
+## growing appears 1 times
+## grim appears 1 times
+## mouth appears 1 times
+## damp, appears 1 times
+## drizzly appears 1 times
+## november appears 1 times
+## soul appears 1 times
+## involuntarily appears 1 times
+## pausing appears 1 times
+## before appears 1 times
+## coffin appears 1 times
+## warehouses, appears 1 times
+## bringing appears 1 times
+## up appears 1 times
+## rear appears 1 times
+## every appears 1 times
+## funeral appears 1 times
+## meet appears 1 times
+## especially appears 1 times
+## hypos appears 1 times
+## get appears 2 times
+## such appears 1 times
+## an appears 1 times
+## upper appears 1 times
+## hand appears 1 times
+## me, appears 1 times
+## that appears 1 times
+## requires appears 1 times
+## strong appears 1 times
+## moral appears 1 times
+## principle appears 1 times
+## prevent appears 1 times
+## from appears 1 times
+## deliberately appears 1 times
+## stepping appears 1 times
+## into appears 1 times
+## street, appears 1 times
+## methodically appears 1 times
+## knocking appears 1 times
+## people’s appears 1 times
+## hats appears 1 times
+## then, appears 1 times
+## account appears 1 times
+## high appears 1 times
+## time appears 2 times
+## sea appears 1 times
+## as appears 2 times
+## soon appears 1 times
+## can appears 1 times
+## this appears 2 times
+## substitute appears 1 times
+## for appears 1 times
+## pistol appears 1 times
+## ball appears 1 times
+## with appears 2 times
+## philosophical appears 1 times
+## flourish appears 1 times
+## cato appears 1 times
+## throws appears 1 times
+## himself appears 1 times
+## upon appears 1 times
+## his appears 1 times
+## sword appears 1 times
+## quietly appears 1 times
+## take appears 1 times
+## ship appears 1 times
+## there appears 1 times
+## surprising appears 1 times
+## if appears 1 times
+## they appears 1 times
+## but appears 1 times
+## knew appears 1 times
+## it, appears 1 times
+## almost appears 1 times
+## all appears 1 times
+## men appears 1 times
+## their appears 1 times
+## degree, appears 1 times
+## other, appears 1 times
+## cherish appears 1 times
+## very appears 1 times
+## nearly appears 1 times
+## same appears 1 times
+## feelings appears 1 times
+## towards appears 1 times
+## ocean appears 1 times
+</code></pre><p>The summer before my senior year, I worked at MD Anderson where I worked with plasmids and bacterial cultures. Plasmids are cut using restriction fragments that can target specific sequences within a larger sequence. Below, I have created an example of how one would calculate the number of cuts and fragments one would expect from using the following restriction fragments: ANTAAT and GCRWTG.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">string5<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;ATGGCAATAACCCCCCGTTTCTACTTCTAGAGGAGAAAAGTATTGACATGAGCGCTCCCGGCACAAGGGCCAAAGAAGTCTCCAATTTCTTATTTCCGAATGACATGCGTCTCCTTGCGGGTAAATCACCGACCGCAATTCATAGAAGCCTGGGGGAACAGATAGGTCTAATTAGCTTAAGAGAGTAAATCCTGGGATCATTCAGTAGTAACCATAAACTTACGCTGGGGCTTCTTCGGCGGATTTTTACAGTTACCAACCAGGAGATTTGAAGTAAATCAGTTGAGGATTTAGCCGCGCTATCCGGTAATCTCCAAATTAAAACATACCGTTCCATGAAGGCTAGAATTACTTACCGGCCTTTTCCATGCCTGCGCTATACCCCCCCACTCTCCCGCTTATCCGTCCGAGCGGAGGCAGTGCGATCCTCCGTTAAGATATTCTTACGTGTGACGTAGCTATGTATTTTGCAGAGCTGGCGAACGCGTTGAACACTTCACAGATGGTAGGGATTCGGGTAAAGGGCGTATAATTGGGGACTAACATAGGCGTAGACTACGATGGCGCCAACTCAATCGCAGCTCGAGCGCCCTGAATAACGTACTCATCTCAACTCATTCTCGGCAATCTACCGAGCGACTCGATTATCAACGGCTGTCTAGCAGTTCTAATCTTTTGCCAGCATCGTAATAGCCTCCAAGAGATTGATGATAGCTATCGGCACAGAACTGAGACGGCGCCGATGGATAGCGGACTTTCGGTCAACCACAATTCCCCACGGGACAGGTCCTGCGGTGCGCATCACTCTGAATGTACAAGCAACCCAAGTGGGCCGAGCCTGGACTCAGCTGGTTCCTGCGTGAGCTCGAGACTCGGGATGACAGCTCTTTAAACATAGAGCGGGGGCGTCGAACGGTCGAGAAAGTCATAGTACCTCGGGTACCAACTTACTCAGGTTATTGCTTGAAGCTGTACTATTTTAGGGGGGGAGCGCTGAAGGTCTCTTCTTCTCATGACTGAACTCGCGAGGGTCGTGAAGTCGGTTCCTTCAATGGTTAAAAAACAAAGGCTTACTGTGCGCAGAGGAACGCCCATCTAGCGGCTGGCGTCTTGAATGCTCGGTCCCCTTTGTCATTCCGGATTAATCCATTTCCCTCATTCACGAGCTTGCGAAGTCTACATTGGTATATGAATGCGACCTAGAAGAGGGCGCTTAAAATTGGCAGTGGTTGATGCTCTAAACTCCATTTGGTTTACTCGTGCATCACCGCGATAGGCTGACAAAGGTTTAACATTGAATAGCAAGGCACTTCCGGTCTCAATGAACGGCCGGGAAAGGTACGCGCGCGGTATGGGAGGATCAAGGGGCCAATAGAGAGGCTCCTCTCTCACTCGCTAGGAGGCAAATGTAAAACAATGGTTACTGCATCGATACATAAAACATGTCCATCGGTTGCCCAAAGTGTTAAGTGTCTATCACCCCTAGGGCCGTTTCCCGCATATAAACGCCAGGTTGTATCCGCATTTGATGCTACCGTGGATGAGTCTGCGTCGAGCGCGCCGCACGAATGTTGCAATGTATTGCATGAGTAGGGTTGACTAAGAGCCGTTAGATGCGTCGCTGTACTAATAGTTGTCGACAGACCGTCGAGATTAGAAAATGGTACCAGCATTTTCGGAGGTTCTCTAACTAGTATGGATTGCGGTGTCTTCACTGTGCTGCGGCTACCCATCGCCTGAAATCCAGCTGGTGTCAAGCCATCCCCTCTCCGGGACGCCGCATGTAGTGAAACATATACGTTGCACGGGTTCACCGCGGTCCGTTCTGAGTCGACCAAGGACACAATCGAGCTCCGATCCGTACCCTCGACAAACTTGTACCCGACCCCCGGAGCTTGCCAGCTCCTCGGGTATCATGGAGCCTGTGGTTCATCGCGTCCGATATCAAACTTCGTCATGATAAAGTCCCCCCCTCGGGAGTACCAGAGAAGATGACTACTGAGTTGTGCGAT&#34;</span>
+
+re<span style="color:#f92672">.</span>findall(<span style="color:#e6db74">r</span><span style="color:#e6db74">&#34;A.TAAT|GC[A|G][A|T]TG&#34;</span>,string5)
+
+</code></pre></div><pre><code>## ['GCGTTG', 'ATTAAT', 'GCAATG', 'ACTAAT']
+</code></pre>
+              <hr>
+              <div class="related-posts">
+                <h5>Related Posts</h5>
+                
+              </div>
+            </div>
+          </div>
+          <hr>
+        <div class="disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+
+    (function() {
+      
+      
+      if (window.location.hostname == "localhost")
+        return;
+
+      var disqus_shortname = '';
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+        </div>
+      </div>
+      
+    </div>
+
+    
+    <footer>
+  <div id="footer">
+    <div class="container">
+      <p class="text-muted">&copy; All rights reserved. Powered by <a href="https://gohugo.io/">Hugo</a> and
+      <a href="http://www.github.com/nurlansu/hugo-sustain/">sustain</a> with ♥</p>
+    </div>
+  </div>
+</footer>
+<div class="footer"></div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/js/docs.min.js"></script>
+<script src="/js/main.js"></script>
+
+<script src="/js/ie10-viewport-bug-workaround.js"></script>
+
+
+    
+  </body>
+</html>

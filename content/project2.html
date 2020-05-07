@@ -1,0 +1,472 @@
+---
+title: 'Project 2: Modeling, Testing, and Predicting'
+author: "SDS348"
+date: ''
+output:
+  pdf_document:
+    toc: yes
+  html_document:
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+---
+
+
+
+<p>Akash Kakkilaya ak36449</p>
+<p>Introduction
+In this project, I am looking at the GPA and MCAT of undergraduate students and seeing if they got accepted into medical school. There are
+10 variables: Accept(A=Accept/D=Deny for matriculation), Acceptance into a school(1=yes/0=n), BCPM GPA(numeric), Regular GPA(numeric), there are four other numeric variables for the sections of the MCAT, Total MCAT score, Sex, and number of applications submitted. There are a total of 550 observations. I will be removing the Accept variable because everyone who got an acceptance into a school accepted the matriculation. I will also remove X1 because that is just a column describing the rows.</p>
+<pre class="r"><code>MedGPA$Accept &lt;- NULL
+
+MedGPA$Acceptance &lt;- as.factor(MedGPA$Acceptance)
+
+med&lt;- MedGPA
+
+man &lt;- manova(cbind(BCPM,GPA,VR,PS,WS,BS,Apps)~Acceptance,data=med)
+summary(man)</code></pre>
+<pre><code>## Df Pillai approx F num Df den Df Pr(&gt;F)
+## Acceptance 1 0.45594 5.5072 7 46 0.0001212 ***
+## Residuals 52
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1</code></pre>
+<pre class="r"><code>summary.aov(man)</code></pre>
+<pre><code>## Response BCPM :
+## Df Sum Sq Mean Sq F value Pr(&gt;F)
+## Acceptance 1 1.3925 1.39249 16.403 0.0001712 ***
+## Residuals 52 4.4144 0.08489
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1
+##
+## Response GPA :
+## Df Sum Sq Mean Sq F value Pr(&gt;F)
+## Acceptance 1 1.0735 1.07352 20.083 4.101e-05 ***
+## Residuals 52 2.7796 0.05345
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1
+##
+## Response VR :
+## Df Sum Sq Mean Sq F value Pr(&gt;F)
+## Acceptance 1 5.49 5.4898 1.7993 0.1856
+## Residuals 52 158.66 3.0511
+##
+## Response PS :
+## Df Sum Sq Mean Sq F value Pr(&gt;F)
+## Acceptance 1 21.959 21.9593 10.692 0.001912 **
+## Residuals 52 106.800 2.0538
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1
+##
+## Response WS :
+## Df Sum Sq Mean Sq F value Pr(&gt;F)
+## Acceptance 1 0.89 0.88981 0.3404 0.5621
+## Residuals 52 135.93 2.61394
+##
+## Response BS :
+## Df Sum Sq Mean Sq F value Pr(&gt;F)
+## Acceptance 1 34.490 34.490 22.898 1.453e-05 ***
+## Residuals 52 78.325 1.506
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1
+##
+## Response Apps :
+## Df Sum Sq Mean Sq F value Pr(&gt;F)
+## Acceptance 1 5.07 5.0704 0.2186 0.642
+## Residuals 52 1205.97 23.1917
+##
+## 1 observation deleted due to missingness</code></pre>
+<pre class="r"><code>med%&gt;% group_by(Acceptance) %&gt;% summarise(mean(BCPM), mean(GPA),mean(VR),mean(PS),mean(WS,na.rm=T),mean(BS),mean(Apps))</code></pre>
+<pre><code>## # A tibble: 2 x 8
+## Acceptance `mean(BCPM)` `mean(GPA)` `mean(VR)`
+`mean(PS)` `mean(WS, na.rm… `mean(BS)` `mean(Apps)`
+## &lt;fct&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 0 3.31 3.39 9.36 8.92 7.29 8.84 8.64
+## 2 1 3.66 3.69 10.1 10.4 7.03 10.6 8.13</code></pre>
+<pre class="r"><code>pairwise.t.test(med$BCPM, med$Acceptance,  p.adj=&quot;none&quot;)</code></pre>
+<pre><code>## 
+##  Pairwise comparisons using t tests with pooled SD 
+## 
+## data:  med$BCPM and med$Acceptance 
+## 
+##   0      
+## 1 8.2e-05
+## 
+## P value adjustment method: none</code></pre>
+<pre class="r"><code>pairwise.t.test(med$GPA,med$Acceptance,  p.adj=&quot;none&quot;)</code></pre>
+<pre><code>## 
+##  Pairwise comparisons using t tests with pooled SD 
+## 
+## data:  med$GPA and med$Acceptance 
+## 
+##   0    
+## 1 2e-05
+## 
+## P value adjustment method: none</code></pre>
+<pre class="r"><code>pairwise.t.test(med$PS,med$Acceptance, p.adj=&quot;none&quot; )</code></pre>
+<pre><code>## 
+##  Pairwise comparisons using t tests with pooled SD 
+## 
+## data:  med$PS and med$Acceptance 
+## 
+##   0      
+## 1 0.00092
+## 
+## P value adjustment method: none</code></pre>
+<pre class="r"><code>pairwise.t.test(med$BS,med$Acceptance, p.adj=&quot;none&quot;)</code></pre>
+<pre><code>## 
+##  Pairwise comparisons using t tests with pooled SD 
+## 
+## data:  med$BS and med$Acceptance 
+## 
+##   0    
+## 1 7e-06
+## 
+## P value adjustment method: none</code></pre>
+<pre class="r"><code>1-(.95)^12</code></pre>
+<pre><code>## [1] 0.4596399</code></pre>
+<pre class="r"><code>.05/12</code></pre>
+<pre><code>## [1] 0.004166667</code></pre>
+<pre class="r"><code>med &lt;- med[c(1,2,3,4,5,6,7,8,10,9)]
+
+
+covmat &lt;- med%&gt;% group_by(Acceptance) %&gt;% do(covs=cov(.[3:9])) 
+for (i in 1:8) {print(as.character(covmat$Acceptance[i])); print(covmat$covs[i])
+  
+}</code></pre>
+<pre><code>## [1] &quot;0&quot;
+## [[1]]
+## BCPM GPA VR PS WS BS Apps
+## BCPM 0.11798900 0.08650867 0.01726667 0.1694500 NA
+0.1426500 -0.02726667
+## GPA 0.08650867 0.07090933 0.07388333 0.1179333 NA
+0.1117000 -0.13471667
+## VR 0.01726667 0.07388333 3.24000000 1.0300000 NA
+-0.0650000 0.01000000
+## PS 0.16945000 0.11793333 1.03000000 2.2433333 NA
+0.5283333 1.05333333
+## WS NA NA NA NA NA NA NA
+## BS 0.14265000 0.11170000 -0.06500000 0.5283333 NA
+1.8066667 -1.14333333
+## Apps -0.02726667 -0.13471667 0.01000000 1.0533333 NA
+-1.1433333 23.74000000
+##
+## [1] &quot;1&quot;
+## [[1]]
+## BCPM GPA VR PS WS BS Apps
+## BCPM 0.07209609 0.05627356 0.07958621 0.14526437
+0.1323908 0.1551264 -0.00354023
+## GPA 0.05627356 0.04946437 0.09862069 0.09977011
+0.1264368 0.1066667 -0.15011494
+## VR 0.07958621 0.09862069 2.98965517 0.47931034 0.6862069
+0.3551724 -1.28965517
+## PS 0.14526437 0.09977011 0.47931034 2.37816092 0.2977011
+1.2678161 -0.67126437
+## WS 0.13239080 0.12643678 0.68620690 0.29770115 2.3091954
+0.9459770 -2.52183908
+## BS 0.15512644 0.10666667 0.35517241 1.26781609 0.9459770
+1.4954023 -0.97471264
+## Apps -0.00354023 -0.15011494 -1.28965517 -0.67126437
+-2.5218391 -0.9747126 22.18850575
+##
+## [1] NA
+## [[1]]
+## NULL
+##
+## [1] NA
+## [[1]]
+## NULL
+##
+## [1] NA
+## [[1]]
+## NULL
+##
+## [1] NA
+## [[1]]
+## NULL
+##
+## [1] NA
+## [[1]]
+## NULL
+##
+## [1] NA
+## [[1]]
+## NULL</code></pre>
+<pre class="r"><code>nrow(MedGPA) * ncol(MedGPA)</code></pre>
+<pre><code>## [1] 550</code></pre>
+<ol style="list-style-type: decimal">
+<li>I performed 12 tests, 1 MANOVA, 7 ANOVA, and 4-ttests. The probability of a type one error is 0.4596399 if we do not do any adjustments. After adjusting the alpha to 0.004166667, we found that acceptees and rejectees of medical school significantly differed in BCPM,GPA, PS, and BS. Our Manova showed that at least on variable was siginifantly different between acceptants and rejectants. All of the assumptions of MANOVA were not met. Assumptions of random sampling and independent observations can be assumed. Another assumption is multivariate normality or n &gt;=25. Our data had more than 25 obs for each group, so this can be met. There does not appear to be homogenity among covariances because apps is much different compared to the other values. Due to the covariances not being normal, I will assume that multivariate nomrality does not exist.</li>
+</ol>
+<pre class="r"><code>meda &lt;- med %&gt;% filter(Acceptance==&quot;1&quot;)
+
+Men&lt;- meda %&gt;% filter(Sex==&quot;M&quot;) %&gt;% select(BCPM)
+Women&lt;- meda %&gt;% filter(Sex==&quot;F&quot;) %&gt;% select(BCPM)
+
+M&lt;- Men$BCPM
+W&lt;- Women$BCPM
+
+comb&lt;- data.frame(Sex=c(rep(&quot;M&quot;,12),rep(&quot;W&quot;,18)),BCPM=c(M,W))
+
+rand_dist&lt;-vector()
+
+for (i in 1:5000) {
+  comb&lt;- data.frame(Sex=sample(comb$Sex),BCPM=comb$BCPM)
+  rand_dist[i]&lt;-mean(comb[comb$Sex==&quot;M&quot;,]$BCPM)- mean(comb[comb$Sex==&quot;W&quot;,]$BCPM)
+  
+  
+}
+
+comb%&gt;% group_by(Sex) %&gt;% summarise(means=mean(BCPM)) %&gt;% summarise(mean_diff=diff(means))</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##   mean_diff
+##       &lt;dbl&gt;
+## 1     0.133</code></pre>
+<pre class="r"><code>{hist(rand_dist,main = &quot;&quot;,ylab = &quot;&quot;);abline(v= -0.07944444,col=&quot;red&quot;)}</code></pre>
+<p><img src="/project2_files/figure-html/Randomization-1.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>mean(rand_dist&gt; 0.07944444 | rand_dist&lt; -0.07944444)</code></pre>
+<pre><code>## [1] 0.444</code></pre>
+<p>The Ho is that the mean BCPM is the same for both female and male acceptants. The Ha is that the mean BCPM is not different for female and male acceptants. The difference between means of male and female BCPM is -0.07944444. This difference is not significant as the p value is .444. This means we fail to reject the null. This means that there is only a .444 probability of seeing a mean difference as great as the one that we saw in the original distribution.</p>
+<pre class="r"><code>library(lmtest)
+library(sandwich)
+med1 &lt;- med
+
+med1$MCAT_c &lt;- med1$MCAT - mean(med1$MCAT)
+med1$GPA_c &lt;- med1$GPA - mean(med1$GPA)
+
+
+
+
+jj &lt;- lm(MCAT_c~Sex*GPA_c,data = med1)
+summary(jj)</code></pre>
+<pre><code>##
+## Call:
+## lm(formula = MCAT_c ~ Sex * GPA_c, data = med1)
+##
+## Residuals:
+## Min 1Q Median 3Q Max
+## -11.3726 -2.5536 -0.2759 2.6843 8.3184
+##
+## Coefficients:
+## Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept) -0.1969 0.7902 -0.249 0.8043
+## SexM 0.4210 1.1266 0.374 0.7102
+## GPA_c 8.6614 3.2968 2.627 0.0113 *
+## SexM:GPA_c 0.7964 4.1276 0.193 0.8478
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1
+##
+## Residual standard error: 4.16 on 51 degrees of freedom
+## Multiple R-squared: 0.2956, Adjusted R-squared: 0.2542
+## F-statistic: 7.135 on 3 and 51 DF, p-value: 0.0004313</code></pre>
+<pre class="r"><code>ggplot(med1, aes(GPA_c, MCAT_c, color=Sex))+geom_point()+geom_smooth(method=&quot;lm&quot;,se=F)</code></pre>
+<p><img src="/project2_files/figure-html/LM-1.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>bptest(jj)</code></pre>
+<pre><code>## 
+##  studentized Breusch-Pagan test
+## 
+## data:  jj
+## BP = 7.949, df = 3, p-value = 0.04708</code></pre>
+<pre class="r"><code>resids&lt;- jj$residuals
+fitvals&lt;- jj$fitted.values
+
+ggplot() +geom_point(aes(fitvals,resids)) + geom_hline(yintercept = 0,col=&quot;red&quot;)</code></pre>
+<p><img src="/project2_files/figure-html/LM-2.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot() +geom_histogram(aes(resids))</code></pre>
+<p><img src="/project2_files/figure-html/LM-3.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot() +geom_qq(aes(sample=resids)) + geom_qq_line(aes(sample=resids))</code></pre>
+<p><img src="/project2_files/figure-html/LM-4.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>coeftest(jj,vcov=vcovHC(jj))</code></pre>
+<pre><code>##
+## t test of coefficients:
+##
+## Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept) -0.19685 0.69634 -0.2827 0.77855
+## SexM 0.42101 1.16005 0.3629 0.71816
+## GPA_c 8.66138 3.43073 2.5246 0.01473 *
+## SexM:GPA_c 0.79641 5.71848 0.1393 0.88979
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1</code></pre>
+<pre class="r"><code>samp_distn1&lt;- replicate(5000,{
+  boot_dat2&lt;-boot_dat2&lt;-med1[sample(nrow(med1),replace = TRUE),]
+  fot&lt;-lm(MCAT_c~Sex*GPA_c,data = boot_dat2)
+  coef(fot)
+})
+
+samp_distn1%&gt;%t%&gt;%as.data.frame%&gt;% summarise_all(sd)</code></pre>
+<pre><code>##   (Intercept)     SexM    GPA_c SexM:GPA_c
+## 1   0.6665463 1.082604 3.185156   4.995718</code></pre>
+<p>When controlling for sex and GPA, MCAT is -0.1969. For Sex with female as control, we see that Males have a 0.4210 higher MCAT than females. Controlling for Sex, we see that as GPA increases by 1, MCAT increases by 8.6614. The slopes difference between Male and female applicants is 0.7964. Our BP test shows that data is not homoskedastic. The graph of residuals vs fitted values shows that linearity is not there either. The data is normal based off the qqplot.</p>
+<p>After doing robust standard errors adjustment, we see that as we control for sex and gpa, MCAT is -0.19685. We see that males have 0.42101 higher MCAT. Controlling for sex, as GpA increases by 1, MCAt increases by 8.66138. The signficance values that were significant with robust SE did not change. We can see that when we control for GPA, Sex does not explain the variation in MCAT signifcantly as it only explains 0.42101 of the variation. IF we control for Sex, GPA significantly explains explain the variation in MCAT at 8.66138.</p>
+<p>Looking at the bootstrapped SE’s I see that the SE for intercept on the original model is higher than the bootrap. The SE in original model for SexM is higher and so is GPA_C. The interaction SE is lower in original model. The p values are directly correlated to the SE, as I see that in the robust SE’s for the SE’s that went up compared to original, the p also went up and vice versa. Compared to robust model, SE in bootstrap for intercept was lower, the SE for SexM was lower. The SE for GPA_C was lower. and the SE for interaction was lower. We can thus assume the p also decreased.</p>
+<p>My linear regression model had a r^2 value of 0.2542. This the amount of variation that is explained by the model.</p>
+<pre class="r"><code>library(plotROC)
+med6&lt;- med
+
+med6&lt;- med6%&gt;%mutate(y=ifelse(Acceptance==&quot;1&quot;,1,0))
+fit9 &lt;- glm(y~MCAT+GPA,data = med6,family = &quot;binomial&quot;)
+coeftest(fit9)</code></pre>
+<pre><code>##
+## z test of coefficients:
+##
+## Estimate Std. Error z value Pr(&gt;|z|)
+## (Intercept) -22.37269 6.45384 -3.4666 0.0005271 ***
+## MCAT 0.16450 0.10316 1.5947 0.1107858
+## GPA 4.67646 1.64159 2.8487 0.0043893 **
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1</code></pre>
+<pre class="r"><code>exp(coef(fit9))</code></pre>
+<pre><code>##  (Intercept)         MCAT          GPA 
+## 1.921606e-10 1.178804e+00 1.073891e+02</code></pre>
+<pre class="r"><code>probs&lt;- predict(fit9,type = &quot;response&quot;)
+table(predict=as.numeric(probs&gt;.5), truth=med6$y) %&gt;% addmargins</code></pre>
+<pre><code>##        truth
+## predict  0  1 Sum
+##     0   18  7  25
+##     1    7 23  30
+##     Sum 25 30  55</code></pre>
+<pre class="r"><code>#Accuracy
+(18+23)/55</code></pre>
+<pre><code>## [1] 0.7454545</code></pre>
+<pre class="r"><code>#Sensitivity
+
+23/30</code></pre>
+<pre><code>## [1] 0.7666667</code></pre>
+<pre class="r"><code>#Specificity
+
+18/25</code></pre>
+<pre><code>## [1] 0.72</code></pre>
+<pre class="r"><code>#PPV
+23/30</code></pre>
+<pre><code>## [1] 0.7666667</code></pre>
+<pre class="r"><code>med6$logit &lt;- predict(fit9,type = &quot;link&quot;)
+
+ggplot(med6) + geom_density(aes(logit,color=Acceptance, fill=Acceptance),alpha=.4) + geom_rug(aes(logit,color=Acceptance)) + geom_vline(xintercept = 0) + xlab(&quot;logit (log-odds)&quot;)</code></pre>
+<p><img src="/project2_files/figure-html/GLM-1.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>med6$prob&lt;-predict(fit9,type=&quot;response&quot;)
+
+
+ROCplot&lt;- ggplot(med6) + geom_roc(aes(d=y,m=prob),n.cuts = 0)
+ROCplot</code></pre>
+<p><img src="/project2_files/figure-html/GLM-2.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>calc_auc(ROCplot)</code></pre>
+<pre><code>##   PANEL group       AUC
+## 1     1    -1 0.8346667</code></pre>
+<pre class="r"><code>#med6$Acceptance&lt;- NULL
+
+class_diag&lt;-function(probs,truth){
+  
+  tab&lt;-table(factor(probs&gt;.5,levels=c(&quot;FALSE&quot;,&quot;TRUE&quot;)),truth)
+  acc=sum(diag(tab))/sum(tab)
+  sens=tab[2,2]/colSums(tab)[2]
+  spec=tab[1,1]/colSums(tab)[1]
+  ppv=tab[2,2]/rowSums(tab)[2]
+
+  if(is.numeric(truth)==FALSE &amp; is.logical(truth)==FALSE) truth&lt;-as.numeric(truth)-1
+  
+  #CALCULATE EXACT AUC
+  ord&lt;-order(probs, decreasing=TRUE)
+  probs &lt;- probs[ord]; truth &lt;- truth[ord]
+  
+  TPR=cumsum(truth)/max(1,sum(truth)) 
+  FPR=cumsum(!truth)/max(1,sum(!truth))
+  
+  dup&lt;-c(probs[-1]&gt;=probs[-length(probs)], FALSE)
+  TPR&lt;-c(0,TPR[!dup],1); FPR&lt;-c(0,FPR[!dup],1)
+  
+  n &lt;- length(TPR)
+  auc&lt;- sum( ((TPR[-1]+TPR[-n])/2) * (FPR[-1]-FPR[-n]) )
+
+  data.frame(acc,sens,spec,ppv,auc)
+}
+
+
+
+
+set.seed(1234)
+data&lt;-med6[sample(nrow(med6)),]
+
+
+fraction&lt;- .5
+train_n&lt;-floor(fraction*nrow(data))
+iter&lt;-500
+
+diags&lt;- NULL
+for (i in 1:iter) {
+  
+  train_index&lt;-sample(1:nrow(data),size=train_n)
+  train&lt;-data[train_index,]
+  test&lt;-data[-train_index,]
+  truth&lt;-test$y
+  
+  fit6&lt;- glm(y~MCAT+GPA, data = train,family = &quot;binomial&quot;)
+  probs&lt;- predict(fit6, newdata = test, type = &quot;response&quot;)
+  diags&lt;-rbind(diags,class_diag(probs,truth))
+  
+}
+
+summarise_all(diags,mean)</code></pre>
+<pre><code>##         acc      sens      spec       ppv       auc
+## 1 0.6930714 0.7572805 0.6350377 0.7168239 0.8123276</code></pre>
+<p>When MCAT and GPA are controlled for, the odds of getting into accepted are multiplied by 1.921606e-10. When MCAT is increased by 1, the odds of getting accepted is multiplied by 1.178804e+00. When increasing GPA by 1, the odds of getting accepted into medical school is multiplied by 4.67646. Accuracy is 0.7454545, Sensitivty is 0.7666667, and #Specificity is 0.72, PPV is 0.7666667. My AUC is 0.8346667. This shows that my model is making a good tradeoff between sensitivity and specificty, and that we are predicting accepted students vs rejected students well overall. After doing a repeated random subsampling, I found my accuracy to be .702, sens to be .75, spec to be .659, ppv to be .735. These values are very close to the original.</p>
+<pre class="r"><code>library(glmnet)
+med7&lt;- med
+
+
+med7&lt;- med7%&gt;%na.omit()
+
+y&lt;- as.matrix(med7$Acceptance)
+x&lt;- model.matrix(Acceptance~.,data = med7)[,-1]
+
+
+
+x&lt;-scale(x)
+
+cv&lt;- cv.glmnet(x,y,family=&quot;binomial&quot;)
+lasso&lt;- glmnet(x,y, family = &quot;binomial&quot;,lambda=cv$lambda.1se)
+coef(lasso)</code></pre>
+<pre><code>## 10 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
+##                     s0
+## (Intercept)  0.2945245
+## SexM        -0.1923729
+## BCPM         .        
+## GPA          0.5511765
+## VR           .        
+## PS           0.1959221
+## WS           .        
+## BS           0.7518042
+## Apps         .        
+## MCAT         .</code></pre>
+<pre class="r"><code>set.seed(1234)
+k=10
+
+dat&lt;- med7%&gt;%sample_frac
+fold1&lt;- ntile(1:nrow(dat),n=10)
+
+diags&lt;- NULL
+
+for (i in 1:k) {
+  
+  train&lt;- dat[fold1!=i,]
+  test&lt;-dat[fold1==i,]
+  truth&lt;-test$Acceptance
+  
+  fit5&lt;- glm(Acceptance~GPA+BS,data = train,family = &quot;binomial&quot;)
+  probs&lt;-predict(fit5, newdata = test, type = &quot;response&quot;)
+  diags&lt;-rbind(diags,class_diag(probs,truth))
+  
+}
+
+
+
+diags%&gt;%summarize_all(mean)</code></pre>
+<pre><code>##         acc sens  spec ppv       auc
+## 1 0.8166667 0.85 0.775 NaN 0.8611111</code></pre>
+<p>After running a lasso, GPA and BS(biological sciences) was retained as being the most predictive variables. The accuracy and sensitivity of this lasso is better than the logisitic experssion. the spec returned as a Nan value. PPV is also higher. This means that this is overall a better predictor than the logisitc regression in part 5.</p>
