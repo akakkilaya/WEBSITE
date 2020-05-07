@@ -16,12 +16,6 @@ In this blog post, I combine my passion for literature, research, and data scien
 ![Moby Dick](/blog/2020-05-07-reticulating-r-and-python_files/mobydick.png)
 
 
-
-
-
-
-
-
 ```{python}
 
 
@@ -62,3 +56,5 @@ re.findall(r"A.TAAT|GC[A|G][A|T]TG",string5)
 
 
 ````
+
+Based on these results we see that there are 4 cuts and five fragments. 
