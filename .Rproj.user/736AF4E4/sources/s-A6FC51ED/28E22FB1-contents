@@ -1,0 +1,213 @@
+---
+title: 'Project 1: Exploratory Data Analysis'
+author: "SDS348"
+date: ''
+output:
+  pdf_document:
+    toc: no
+  html_document:
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, fig.align = "center", warning = F, message = F,
+tidy=TRUE, tidy.opts=list(width.cutoff=60), R.options=list(max.print=100))
+
+Wine<-read.csv("Fine_Wine___Good_Spirits_Retail_Stores_Sales_by_County__Annual__FY_2016-17_to_Current__Liquor_Control_Board.csv")
+
+wage <-read.csv("Estimated_Lost_Lifetime_Wages_Due_to_Premature_Opioid-Related_Mortality_CY_2016_-_2017_County_Annual_Centers_for_Disease_Control_and_Prevention__CDC__United_States_Department_of_Labor.csv")
+
+maternal <-read.csv("Maternal_Opioid__Use_Hospital_Stays_2016-2017_County_Health_Care_Cost_Containment_Council__PHC4_.csv")
+
+Wine <- as.data.frame(Wine)
+wage <-as.data.frame(wage)
+
+
+
+maternal$Count.of.Maternal.Stays.with.Opioid.Use <- as.numeric(as.character(maternal$Count.of.Maternal.Stays.with.Opioid.Use))
+
+library(dplyr)
+library(tibble)
+library(ggplot2)
+library(ggpubr)
+library(ggplot2movies)
+library(cluster)
+library(tidyr)
+library(plotly)
+library(ggthemes)
+library(purrr)
+
+
+```
+I chose three datasets for this project. All three datasets focus on the years 2016-2017. The first dataset includes the amount of wine and spirits sold in retail stores in different counties in Pennsylvania. The second dataset discusses the amount of money in terms of wages and collected that is lost due to premature opioid related mortality in each county in Pennsylvania. The third dataset includes data (total count and rate per 1000 maternal hospital stays) regarding the number mothers in each Pennsylvania county who at the time of delivery or other pregancy-related stays had with issues regarding opioid use, abuse, and/or dependence. I wanted to see if there is a correlation between number of mothers who had opioid issues, the amount of money lost in terms of wages and tax, and the amount of alcohol sold in the county. I found these datasets on https://data.pa.gov/browse. I picked these datasets because opioid abuse is a pervasive issue in the US. I expect there to be a positive correlation between the amount of money lost due to premature opiod death and the number of mothers who had opioid issues during their hospital stay. I also expect there to be a positive correlation between these two variables and the amount of alcohol sold. 
+
+```{r tidy}
+glimpse(Wine)
+glimpse(wage)
+glimpse(maternal)
+Wine <- as.data.frame(Wine)
+newWine <- Wine %>% filter(Fiscal.Year == "2016-17")
+newWine$County <- toupper(newWine$County)
+newWage <- wage %>% group_by(Geographic.Name) %>% summarize(LostWages=sum(Estimated.Lost.Lifetime.Wages),LostTax=sum(Estimated.Lost.Lifetime.State.Income.Tax.Revenue)) 
+newWage$Geographic.Name <- toupper(newWage$Geographic.Name)
+joined <- maternal %>% left_join(newWine, by= c(County.Name = "County")) %>% rename(County=County.Name) 
+compjoin <- joined %>% left_join(newWage, by=c(County= "Geographic.Name"))
+onlycounty <- compjoin[!grepl("COMMONWEALTH",compjoin$County),]
+onlycounty <- select(onlycounty,-c(FIPS.County.Code.x))
+onlycounty <- onlycounty %>% rename(County.FIPS=FIPS.County.Code.y)
+onlycounty <- select(onlycounty,-c(County.FIPS, Pennsylvania.County.Code ,  FIPS.State.Code, Fiscal.Year  ))
+glimpse(onlycounty)
+full <- onlycounty
+
+```
+
+I first made a new dataset called newWine that only had the amount of alcohol sold during 2016-2017 to keep it consistent with the other data. I did a pivot_wider to split the years of the original function to show that I can do the function. A new dataset called newWage was created to combine the total amount of tax and wage lost over 2016 and 2017. I pivoted_longer wage and combined total wage lost and total tax lost to show I could use the function. I then combined maternal with newWine with left_join and formed a new dataset called joined. I then created a new dataset called compjoin that combined joined with newWage. I then removed the row that contained COMMONWEALTH and created a dataset called onlycounty. I did this because that row contained sum of all the counties. I removed several variables that were redundant. 
+
+I did left_join because all the datasets had the same amount of rows. I capitalized all the county names in the datasets that were using sentence case. I did two left_joins because I had three datasets. I did not experience any dropped rows. 
+
+
+
+
+```{r wrangling}
+##mutated a variable and selected
+mfull <- full %>% select(-contains("Type.of.Count")) %>% mutate(Percentage.of.Maternal.Stays.with.Opioid.Use=(Rate.of.Maternal.Stays.with.Opioid.Use/1000)*100) %>% select(-contains("Georeferenced.County.location")) 
+mfull <- mfull %>% select(-contains("New.Georeferenced.Column")) 
+mfull %>%filter(Latitude < 40.9193135008 & Longitude < (-77.8250011212)) %>% transmute( County=County,LostWages=LostWages)%>% arrange(desc(LostWages))
+mfull <- mfull %>% mutate(LatCat=ifelse(Latitude> 40.9193135008,"North","South")) 
+Ewdat <- mfull %>% mutate(LongCat=ifelse(Longitude < (-77.8250011212) , "West","East"))
+Ewdat$Direction <- paste(Ewdat$LatCat,Ewdat$LongCat,sep = "")
+Complete <- Ewdat %>% select(-contains("LatCat")) %>% select(-contains("LongCat"))
+Geodat <-Complete %>% group_by(Direction) %>% summarize(mean_lost_tax=mean(LostTax,na.rm=T)) 
+head(Geodat)
+Complete <- Complete %>% select(-contains("State.FIPS.Code")) %>% select(-contains("Type.of.Rate")) %>% select(-contains("Time.Period")) %>% select(-contains("Time.Period.Date.Start")) %>% select(-contains("Time.Period.Date.End")) %>% select(-contains("Latitude.Longitude")) %>% select(-contains("County.FIPS.Code")) %>% select(-contains("County.Code.Number"))
+
+```
+
+In this part, I did some more tidying and wrangling. I created a new numeric variable for the dataset called Percentage of Maternal Stays with Opioid use. This variable represents the percent of women that had issues with opiods in terms of total stays. I also created a new categorical variable called Direction. This variable describes which part of the state the county is in. I did this by using longitude and latitude. I selected the longitude and latitude of the center county and based my directions off of that. I also removed extraneous variables and created the dataset Complete which will be used for more summary 
+
+I also did a filter and a transmute function that contains the counties with with latitude below 40.9193135008 and longitude -77.8250011212, and arranged it by lost wages. ALLEGHENY lost the most wages due to premature death. I also created a new dataset called Geodat that shows in which region on average the most tax was lost. The Southeast had the most lost tax on average.
+
+```{r summary, echo=FALSE}
+longdat <- Complete %>% summarise_if(is.numeric,c(JMean=mean,JMedian=median,JMinimum=min,JMaximum=max,Jsd=sd),na.rm=T) %>% select(-contains("Latitude")) %>% select(-contains("Longitude"))
+noorg <- longdat %>% pivot_longer(everything()) %>% separate(name,into=c("Category","Stat"),sep = "_J") %>% pivot_wider(names_from = "Stat",values_from = "value") %>% rename(Mean=Mean,Median=Median,Minumum=Minimum,Maximum=Maximum,SD=sd) 
+head(noorg)
+catorg <- Complete %>% group_by(Direction) %>% summarise(meanJ_LostWage=mean(LostWages,na.rm = T), medianJ_LostWage = median(LostWages,na.rm=T), sdJ_LostWage = sd(LostWages, na.rm = T), n=n(), seJ_LostWage=sdJ_LostWage/sqrt(n), meanJ_LostTax = mean(LostTax,na.rm=T),medianJ_LostTax = median(LostTax,na.rm=T), sdJ_LostTax = sd(LostTax,na.rm=T), seJ_LostTax=sdJ_LostTax/sqrt(n), meanJ_Sales=mean(Sales,na.rm = T),medianJ_Sales=median(Sales,na.rm=T),sdJ_Sales=sd(Sales,na.rm=T),seJ_Sales=sdJ_Sales/sqrt(n),meanJ_Rate_of_Maternal_Stays_With_Opiod_Use=mean(Rate.of.Maternal.Stays.with.Opioid.Use,na.rm=T), medianJ_Rate_of_Maternal_Stays_With_Opiod_Use=median(Rate.of.Maternal.Stays.with.Opioid.Use,na.rm = T), sdJ_Rate_of_Maternal_Stays_With_Opiod_Use=sd(Rate.of.Maternal.Stays.with.Opioid.Use,na.rm = T), seJ_Rate_of_Maternal_Stays_With_Opiod_Use=sdJ_Rate_of_Maternal_Stays_With_Opiod_Use/sqrt(n))   
+orgcat <- catorg %>% pivot_longer(2:18, names_to="Stat",values_to = "Value")
+orgcat <- orgcat %>% separate(Stat,into=c("Stat","Category"),sep = "J_") %>% na.omit
+head(orgcat)
+Sedata <- Complete %>% group_by(County,Direction) %>% filter(Direction=="SouthEast") 
+n_distinct(Sedata$County)
+var(Sedata$LostTax)
+quantiles <- Sedata %>% group_by(Direction) %>% summarise_at(3:8, list(Q3=quantile), probs=.75, na.rm=T) %>% select(-contains("Latitude")) %>% select(-contains("Longitude"))
+quantiles
+```
+I first took the mean, median, minimum, SD of each of the variables across all the regions. I then took the mean,median, sd, and se across each of the four regions. We can see that SE lost the most tax and wage on average. The Northwest had the highest average rate of maternal stays with hospital stays. The SE had the most alcohol sales. I also took summary stats with two categories; counties in the SE. There are 21 counties in the SE and the variance for the LostTax is $1.332539e+14. 
+
+I also looked at the 3rd quantile for the SE. The rate of maternal stays with opioid use was 19.7, the Sales of alcohol was 80412846 dollars , the lost wage was 230424348	dollars, and the lost tax was 7074028.
+
+
+```{R,echo=FALSE}
+
+
+Nacomp <- Complete %>% na.omit %>% select_if(is.numeric)%>% select(-contains("Latitude")) %>% select(-contains("Longitude"))
+
+tidycomp <- cor(Nacomp) %>% as.data.frame%>% tibble::rownames_to_column()%>% pivot_longer(-1,names_to="name",values_to="correlation")
+
+
+tidycomp %>% ggplot(aes(rowname,name,fill=correlation)) + geom_tile() + scale_fill_gradient2(low="white", mid="pink", high="lavender") + geom_text(aes(label=round(correlation,2)), color="black",size=2) + theme(axis.text.x = element_text(angle = 90)) + coord_fixed() + xlab("") + ylab("")
+
+
+
+
+```
+
+
+Here we can see the heatmap, and the correlations. Sales of alchol is positively correlated with the number of maternal stays with opioid use, lost tax, and lost wages. It is negatively correlated with percentage and the rate of maternal stays with opioid use. Rate of maternal stays is negatively correlated with everything except for percentage of maternal stays. Percentage of maternal stays has the same relationships as rate. Lost wages is negatively correlated with percentage of maternal stays and rate of maternal stays. Lost Tax has the same correlation. Count of maternal stays has no correlation with percent and rate. 
+
+```{r plots, echo=FALSE}
+
+Ewdat$County.FIPS.Code <- factor(Ewdat$County.FIPS.Code)
+
+
+ggplot(Complete, aes(x=LostTax,y=Sales, color=County)) + geom_point() + theme_dark() + theme(legend.position = "none",axis.text.x = element_text(angle = 90),panel.background = element_rect(fill = "#2D2D2D"))+ 
+xlab("Number of Maternal Stays with Opioid Use") + ylab("Sales of Spirits and Wine") + scale_y_log10() + scale_x_continuous(breaks= c(0,1e+07,2e+07,3e+07,4e+07,5e+07))
+                                                                                          
+
+ggplot(Complete, aes(County)) + geom_bar(aes(y=LostWages, fill= Direction),stat = "summary",  fun.y="median") + theme_economist() + 
+  theme(legend.position = "none", axis.text.x = element_text(angle = 90, size = 4)) + 
+  ylab("Mean Lifetime Lost Wages") + 
+  xlab("Region of Pennyslvania") + 
+  facet_grid(~Direction, scales="free") 
+
+ 
+
+```
+The first graph shows a positive correlation between number of maternal stays with opioid use and the sales of spirits of wine. I colored this graph by county. The second graph looks at the amount of lost wages per region. From the graph we can see that the SouthEast had the most lost wages, with Philadelphia county in the lead. 
+
+
+```{R PCA}
+
+complete8<- Complete %>% na.omit
+
+po <- Complete %>% na.omit %>% select(-County,-Direction,-Latitude,-Longitude)
+
+po_nums <- po%>% select_if(is.numeric) %>% scale
+
+rownames(po_nums)<-complete8$County 
+
+
+po_pca <- princomp(po_nums)
+names(po_pca)
+
+summary(po_pca, loadings = T)
+
+
+eigval<-po_pca$sdev^2
+
+varprop=round(eigval/sum(eigval),2)
+
+ggplot() + geom_bar(aes(y=varprop, x=1:6), stat="identity") + xlab("") + geom_path(aes(y=varprop, x=1:6)) + 
+  geom_text(aes(x=1:6, y=varprop, label=round(varprop, 2)), vjust=1, col="white", size=5) + 
+  scale_y_continuous(breaks=seq(0, .8, .2), labels = scales::percent) + scale_x_continuous(breaks=1:10)
+
+
+round(cumsum(eigval)/sum(eigval),2) 
+
+eigval
+
+
+
+
+
+podf<-data.frame(PC1=po_pca$scores[,1], PC2=po_pca$scores[,2]) 
+
+
+ggplot(podf,aes(PC1, PC2))+geom_point()
+
+Name<- complete8$County
+
+
+po_pca$loadings[1:6,1:4]%>%as.data.frame%>%tibble::rownames_to_column()%>% ggplot()+geom_hline(aes(yintercept=0),lty=2)+
+geom_vline(aes(xintercept=0),lty=2)+ylab("PC2")+xlab("PC1")+ geom_segment(aes(x=0,y=0,xend=Comp.1,yend=Comp.2),arrow=arrow(),col="red")+ geom_label(aes(x=Comp.1*.9,y=Comp.2+.1,label=rowname))
+
+
+
+
+
+
+po_pca$score%>%as.data.frame%>%cbind(Name,.)%>%top_n(3,Comp.1)
+complete8%>%filter(County%in%c("ELK","VENANGO","ARMSTRONG"))
+po_pca$scores%>%as.data.frame%>%cbind(Name,.)%>%top_n(3,wt=desc(Comp.1))
+complete8%>%filter(County%in%c("MONTGOMERY","BUCKS","ALLEGHENY"))
+po_pca$scores%>%as.data.frame%>%cbind(Name,.)%>%top_n(3,wt=Comp.2)
+complete8%>%filter(County%in%c("ELK","ALLEGHENY","CLEARFIELD"))
+po_pca$scores%>%as.data.frame%>%cbind(Name,.)%>%top_n(3,wt=desc(Comp.2))
+complete8%>%filter(County%in%c("CENTRE","CUMBERLAND","LEHIGH"))
+```
+I did PCA analysis on my data. After obtaining the scree plot I decided to keep PC 1 and PC2 as they both had eigen values of over 1. I then plotted them on a scatter plot and then made a loadings plot to better see the data. From the data we can see that a high score on PCA1 means that a high percentage of maternal stays with opioid use, but a mid-low overall of the other variables. A low score on PCA 1 means that percentage of maternal stays with opioid use is low, but the count is very high. For PCA 2, a high score means high sales of alcohol, high lost taxes and wages, and a middle-low amount of percentage of mother stays with opioid use. A low score on PCA2 means a very low percentage of mother stays with opioid use, and a middle-low amount of everything else. 
+
+I think it is interesting that rate and percentage of maternal stays with opioid use is not together. This leads to percentage being poorly correlated with everything. Based on the loadings graph, there is correlation between sales of alcohol, count of maternal stays with opioid use, lost wages, and sales. These are all negatively correlated with percentage of maternal stays with opiod use. 

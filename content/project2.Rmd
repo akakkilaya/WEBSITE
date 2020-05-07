@@ -1,0 +1,314 @@
+---
+title: 'Project 2: Modeling, Testing, and Predicting'
+author: "SDS348"
+date: ''
+output:
+  pdf_document:
+    toc: yes
+  html_document:
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+---
+
+
+```{r setup, include=FALSE}
+library(knitr)
+hook_output = knit_hooks$get('output')
+knit_hooks$set(output = function(x, options) {
+  # this hook is used only when the linewidth option is not NULL
+  if (!is.null(n <- options$linewidth)) {
+    x = knitr:::split_lines(x)
+    # any lines wider than n should be wrapped
+    if (any(nchar(x) > n)) x = strwrap(x, width = n)
+    x = paste(x, collapse = '\n')
+  }
+  hook_output(x, options)
+})
+
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE,fig.align="center",warning=FALSE,message=FALSE,fig.width=8, fig.height=5, linewidth=60)
+options(tibble.width = 100,width = 100)
+library(tidyverse)
+library(mvnormtest)
+
+MedGPA <- read_csv("MedGPA.csv", col_types = cols(X1 = col_skip()))
+
+
+
+```
+
+Akash Kakkilaya ak36449
+
+Introduction
+In this project, I am looking at the GPA and MCAT of undergraduate students and seeing if they got accepted into medical school. There are 
+10 variables: Accept(A=Accept/D=Deny for matriculation), Acceptance into a school(1=yes/0=n), BCPM GPA(numeric), Regular GPA(numeric), there are four other numeric variables for the sections of the MCAT, Total MCAT score, Sex, and number of applications submitted. There are a total of 550 observations. I will be removing the Accept variable because everyone who got an acceptance into a school accepted the matriculation. I will also remove X1 because that is just a column describing the rows. 
+```{R MANOVA}
+
+
+
+MedGPA$Accept <- NULL
+
+MedGPA$Acceptance <- as.factor(MedGPA$Acceptance)
+
+med<- MedGPA
+
+man <- manova(cbind(BCPM,GPA,VR,PS,WS,BS,Apps)~Acceptance,data=med)
+summary(man)
+summary.aov(man)
+med%>% group_by(Acceptance) %>% summarise(mean(BCPM), mean(GPA),mean(VR),mean(PS),mean(WS,na.rm=T),mean(BS),mean(Apps))
+pairwise.t.test(med$BCPM, med$Acceptance,  p.adj="none")
+pairwise.t.test(med$GPA,med$Acceptance,  p.adj="none")
+pairwise.t.test(med$PS,med$Acceptance, p.adj="none" )
+pairwise.t.test(med$BS,med$Acceptance, p.adj="none")
+1-(.95)^12
+.05/12
+
+
+med <- med[c(1,2,3,4,5,6,7,8,10,9)]
+
+
+covmat <- med%>% group_by(Acceptance) %>% do(covs=cov(.[3:9])) 
+for (i in 1:8) {print(as.character(covmat$Acceptance[i])); print(covmat$covs[i])
+  
+}
+
+nrow(MedGPA) * ncol(MedGPA)
+
+```
+
+1) I performed 12 tests, 1 MANOVA, 7 ANOVA, and 4-ttests. The probability of a type one error is 0.4596399 if we do not do any adjustments. After adjusting the alpha to 0.004166667, we found that acceptees and rejectees of medical school significantly differed in BCPM,GPA, PS, and BS. Our Manova showed that at least on variable was siginifantly different between acceptants and rejectants. All of the assumptions of MANOVA were not met. Assumptions of random sampling and independent observations can be assumed. Another assumption is multivariate normality or n >=25. Our data had more than 25 obs for each group, so this can be met. There does not appear to be homogenity among covariances because apps is much different compared to the other values. Due to the covariances not being normal, I will assume that multivariate nomrality does not exist. 
+
+```{R Randomization}
+
+meda <- med %>% filter(Acceptance=="1")
+
+Men<- meda %>% filter(Sex=="M") %>% select(BCPM)
+Women<- meda %>% filter(Sex=="F") %>% select(BCPM)
+
+M<- Men$BCPM
+W<- Women$BCPM
+
+comb<- data.frame(Sex=c(rep("M",12),rep("W",18)),BCPM=c(M,W))
+
+rand_dist<-vector()
+
+for (i in 1:5000) {
+  comb<- data.frame(Sex=sample(comb$Sex),BCPM=comb$BCPM)
+  rand_dist[i]<-mean(comb[comb$Sex=="M",]$BCPM)- mean(comb[comb$Sex=="W",]$BCPM)
+  
+  
+}
+
+comb%>% group_by(Sex) %>% summarise(means=mean(BCPM)) %>% summarise(mean_diff=diff(means))
+
+
+{hist(rand_dist,main = "",ylab = "");abline(v= -0.07944444,col="red")}
+
+
+mean(rand_dist> 0.07944444 | rand_dist< -0.07944444)
+
+```
+The Ho is that the mean BCPM is the same for both female and male acceptants. The Ha is that the mean BCPM is not different for female and male acceptants. The difference between means of male and female BCPM is -0.07944444. This difference is not significant as the p value is .444. This means we fail to reject the null. This means that there is only a .444 probability of seeing a mean difference as great as the one that we saw in the original distribution. 
+
+
+```{R LM}
+
+library(lmtest)
+library(sandwich)
+med1 <- med
+
+med1$MCAT_c <- med1$MCAT - mean(med1$MCAT)
+med1$GPA_c <- med1$GPA - mean(med1$GPA)
+
+
+
+
+jj <- lm(MCAT_c~Sex*GPA_c,data = med1)
+summary(jj)
+
+
+ggplot(med1, aes(GPA_c, MCAT_c, color=Sex))+geom_point()+geom_smooth(method="lm",se=F)
+bptest(jj)
+
+
+resids<- jj$residuals
+fitvals<- jj$fitted.values
+
+ggplot() +geom_point(aes(fitvals,resids)) + geom_hline(yintercept = 0,col="red")
+
+ggplot() +geom_histogram(aes(resids))
+ggplot() +geom_qq(aes(sample=resids)) + geom_qq_line(aes(sample=resids))
+
+
+coeftest(jj,vcov=vcovHC(jj))
+
+
+samp_distn1<- replicate(5000,{
+  boot_dat2<-boot_dat2<-med1[sample(nrow(med1),replace = TRUE),]
+  fot<-lm(MCAT_c~Sex*GPA_c,data = boot_dat2)
+  coef(fot)
+})
+
+samp_distn1%>%t%>%as.data.frame%>% summarise_all(sd)
+
+```
+When controlling for sex and GPA, MCAT is -0.1969. For Sex with female as control, we see that Males have a  0.4210 higher MCAT than females. Controlling for Sex, we see that as GPA increases by 1, MCAT increases by  8.6614. The slopes difference between Male and female applicants is 0.7964. Our BP test shows that data is not homoskedastic. The graph of residuals vs fitted values shows that linearity is not there either. The data is normal based off the qqplot. 
+
+After doing robust standard errors adjustment, we see that as we control for sex and gpa, MCAT is -0.19685. We see that  males have  0.42101 higher MCAT. Controlling for sex, as GpA increases by 1, MCAt increases by 8.66138. The signficance values that were significant with robust SE did not change. We can see that when we control for GPA, Sex does not explain the variation in MCAT signifcantly as it only explains  0.42101 of the variation. IF we control for Sex, GPA significantly explains explain the variation in MCAT at  8.66138. 
+
+Looking at the bootstrapped SE's I see that the SE for intercept on the original model is higher than the bootrap. The SE in original model for SexM is higher and so is GPA_C. The interaction SE is lower in original model. The p values are directly correlated to the SE, as I see that in the robust SE's for the SE's that went up compared to original, the p also went up and vice versa. Compared to robust model, SE in bootstrap for intercept was lower, the SE for SexM was lower. The SE for GPA_C was lower. and the SE for interaction was lower. We can thus assume the p also decreased. 
+
+My linear regression model had a r^2 value of 0.2542. This the amount of variation that is explained by the model. 
+
+
+```{R GLM}
+library(plotROC)
+med6<- med
+
+med6<- med6%>%mutate(y=ifelse(Acceptance=="1",1,0))
+fit9 <- glm(y~MCAT+GPA,data = med6,family = "binomial")
+coeftest(fit9)
+exp(coef(fit9))
+probs<- predict(fit9,type = "response")
+table(predict=as.numeric(probs>.5), truth=med6$y) %>% addmargins
+
+
+#Accuracy
+(18+23)/55
+
+#Sensitivity
+
+23/30
+
+#Specificity
+
+18/25
+
+#PPV
+23/30
+
+
+med6$logit <- predict(fit9,type = "link")
+
+ggplot(med6) + geom_density(aes(logit,color=Acceptance, fill=Acceptance),alpha=.4) + geom_rug(aes(logit,color=Acceptance)) + geom_vline(xintercept = 0) + xlab("logit (log-odds)")
+
+med6$prob<-predict(fit9,type="response")
+
+
+ROCplot<- ggplot(med6) + geom_roc(aes(d=y,m=prob),n.cuts = 0)
+ROCplot
+calc_auc(ROCplot)
+
+#med6$Acceptance<- NULL
+
+class_diag<-function(probs,truth){
+  
+  tab<-table(factor(probs>.5,levels=c("FALSE","TRUE")),truth)
+  acc=sum(diag(tab))/sum(tab)
+  sens=tab[2,2]/colSums(tab)[2]
+  spec=tab[1,1]/colSums(tab)[1]
+  ppv=tab[2,2]/rowSums(tab)[2]
+
+  if(is.numeric(truth)==FALSE & is.logical(truth)==FALSE) truth<-as.numeric(truth)-1
+  
+  #CALCULATE EXACT AUC
+  ord<-order(probs, decreasing=TRUE)
+  probs <- probs[ord]; truth <- truth[ord]
+  
+  TPR=cumsum(truth)/max(1,sum(truth)) 
+  FPR=cumsum(!truth)/max(1,sum(!truth))
+  
+  dup<-c(probs[-1]>=probs[-length(probs)], FALSE)
+  TPR<-c(0,TPR[!dup],1); FPR<-c(0,FPR[!dup],1)
+  
+  n <- length(TPR)
+  auc<- sum( ((TPR[-1]+TPR[-n])/2) * (FPR[-1]-FPR[-n]) )
+
+  data.frame(acc,sens,spec,ppv,auc)
+}
+
+
+
+
+set.seed(1234)
+data<-med6[sample(nrow(med6)),]
+
+
+fraction<- .5
+train_n<-floor(fraction*nrow(data))
+iter<-500
+
+diags<- NULL
+for (i in 1:iter) {
+  
+  train_index<-sample(1:nrow(data),size=train_n)
+  train<-data[train_index,]
+  test<-data[-train_index,]
+  truth<-test$y
+  
+  fit6<- glm(y~MCAT+GPA, data = train,family = "binomial")
+  probs<- predict(fit6, newdata = test, type = "response")
+  diags<-rbind(diags,class_diag(probs,truth))
+  
+}
+
+summarise_all(diags,mean)
+
+
+
+
+```
+
+When MCAT and GPA are controlled for, the odds of getting into accepted are multiplied by 1.921606e-10. When MCAT is increased by 1, the odds of getting accepted is multiplied by 1.178804e+00. When increasing GPA by 1, the odds of getting accepted into medical school is multiplied by 4.67646. Accuracy is 0.7454545, Sensitivty is  0.7666667, and #Specificity is  0.72, PPV is  0.7666667. My AUC is 0.8346667. This shows that my model is making a good tradeoff between sensitivity and specificty, and that we are predicting accepted students vs rejected students well overall. After doing a repeated random subsampling, I found my accuracy to be .702, sens to be .75, spec to be .659, ppv to be .735. These values are very close to the original. 
+
+```{R LASSO}
+library(glmnet)
+med7<- med
+
+
+med7<- med7%>%na.omit()
+
+y<- as.matrix(med7$Acceptance)
+x<- model.matrix(Acceptance~.,data = med7)[,-1]
+
+
+
+x<-scale(x)
+
+cv<- cv.glmnet(x,y,family="binomial")
+lasso<- glmnet(x,y, family = "binomial",lambda=cv$lambda.1se)
+coef(lasso)
+
+
+set.seed(1234)
+k=10
+
+dat<- med7%>%sample_frac
+fold1<- ntile(1:nrow(dat),n=10)
+
+diags<- NULL
+
+for (i in 1:k) {
+  
+  train<- dat[fold1!=i,]
+  test<-dat[fold1==i,]
+  truth<-test$Acceptance
+  
+  fit5<- glm(Acceptance~GPA+BS,data = train,family = "binomial")
+  probs<-predict(fit5, newdata = test, type = "response")
+  diags<-rbind(diags,class_diag(probs,truth))
+  
+}
+
+
+
+diags%>%summarize_all(mean)
+
+```
+
+After running a lasso, GPA and BS(biological sciences) was retained as being the most predictive variables. The accuracy  and sensitivity of this lasso is better than the logisitic experssion. the spec returned as a Nan value. PPV is also higher. This means that this is overall a better predictor than the logisitc regression in part 5. 
+
+
+
+
