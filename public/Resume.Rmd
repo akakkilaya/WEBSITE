@@ -1,0 +1,12 @@
+---
+title: "Resume"
+author: "Akash Kakkilaya"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+
+Please find my professional resume below
+
+<a href="/Resume.pdf" target="_blank">Resume</a>
+

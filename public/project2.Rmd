@@ -1,7 +1,7 @@
 ---
 title: 'Project 2: Modeling, Testing, and Predicting'
 author: "SDS348"
-date: ''
+date: "2020-05-07"
 output:
   pdf_document:
     toc: yes
@@ -38,7 +38,7 @@ MedGPA <- read_csv("MedGPA.csv", col_types = cols(X1 = col_skip()))
 
 ```
 
-Akash Kakkilaya ak36449
+
 
 Introduction
 In this project, I am looking at the GPA and MCAT of undergraduate students and seeing if they got accepted into medical school. There are 

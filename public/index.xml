@@ -6,18 +6,46 @@
     <description>Recent content on Portfolio</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Sun, 02 Oct 2016 22:55:05 -0400</lastBuildDate>
+    <lastBuildDate>Thu, 07 May 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Combining a passion for literature, research, and python</title>
+      <title>Combining a passion for literature, research, and Python</title>
       <link>/blog/reticulating-r-and-python/</link>
       <pubDate>Thu, 07 May 2020 00:00:00 +0000</pubDate>
       
       <guid>/blog/reticulating-r-and-python/</guid>
-      <description>In this blog post, I combine my passion for literature, research, and data science. I began reading classic books, and one of my favorite was Moby Dick by Herman Melville. In the code block below, I have created a string of the opening paragraph of the book. I then took out all the punctuation marks with re.sub() and replaced them with spaces. I then made the string into a list of lower case words.</description>
+      <description>In this blog post, I combine my passion for literature, research, and Python. I began reading classic books in the second grade, and one of my favorite was Moby Dick by Herman Melville. In the code block below, I have created a string of the opening paragraph of the book. I then took out all the punctuation marks with re.sub() and replaced them with spaces. I then made the string into a list of lower case words.</description>
+    </item>
+    
+    <item>
+      <title>Project 1: Exploratory Data Analysis</title>
+      <link>/project1/</link>
+      <pubDate>Thu, 07 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/project1/</guid>
+      <description>I chose three datasets for this project. All three datasets focus on the years 2016-2017. The first dataset includes the amount of wine and spirits sold in retail stores in different counties in Pennsylvania. The second dataset discusses the amount of money in terms of wages and collected that is lost due to premature opioid related mortality in each county in Pennsylvania. The third dataset includes data (total count and rate per 1000 maternal hospital stays) regarding the number mothers in each Pennsylvania county who at the time of delivery or other pregancy-related stays had with issues regarding opioid use, abuse, and/or dependence.</description>
+    </item>
+    
+    <item>
+      <title>Project 2: Modeling, Testing, and Predicting</title>
+      <link>/project2/</link>
+      <pubDate>Thu, 07 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/project2/</guid>
+      <description>Introduction In this project, I am looking at the GPA and MCAT of undergraduate students and seeing if they got accepted into medical school. There are 10 variables: Accept(A=Accept/D=Deny for matriculation), Acceptance into a school(1=yes/0=n), BCPM GPA(numeric), Regular GPA(numeric), there are four other numeric variables for the sections of the MCAT, Total MCAT score, Sex, and number of applications submitted. There are a total of 550 observations. I will be removing the Accept variable because everyone who got an acceptance into a school accepted the matriculation.</description>
+    </item>
+    
+    <item>
+      <title>Resume</title>
+      <link>/resume/</link>
+      <pubDate>Thu, 07 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/resume/</guid>
+      <description>Please find my professional resume below
+Resume</description>
     </item>
     
     <item>
@@ -29,26 +57,7 @@
       <description>Here are some projects I have recently completed:
   Exploratory Data Analysis with Tidyverse Tools
   Modeling, Testing, and Classification
-  tutGez-quwdyd-7riwqe</description>
-    </item>
-    
-    <item>
-      <title>Project 1: Exploratory Data Analysis</title>
-      <link>/project1/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/project1/</guid>
-      <description>I chose three datasets for this project. All three datasets focus on the years 2016-2017. The first dataset includes the amount of wine and spirits sold in retail stores in different counties in Pennsylvania. The second dataset discusses the amount of money in terms of wages and collected that is lost due to premature opioid related mortality in each county in Pennsylvania. The third dataset includes data (total count and rate per 1000 maternal hospital stays) regarding the number mothers in each Pennsylvania county who at the time of delivery or other pregancy-related stays had with issues regarding opioid use, abuse, and/or dependence.</description>
-    </item>
-    
-    <item>
-      <title>Project 2: Modeling, Testing, and Predicting</title>
-      <link>/project2/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/project2/</guid>
-      <description>Akash Kakkilaya ak36449
-Introduction In this project, I am looking at the GPA and MCAT of undergraduate students and seeing if they got accepted into medical school. There are 10 variables: Accept(A=Accept/D=Deny for matriculation), Acceptance into a school(1=yes/0=n), BCPM GPA(numeric), Regular GPA(numeric), there are four other numeric variables for the sections of the MCAT, Total MCAT score, Sex, and number of applications submitted. There are a total of 550 observations.</description>
+  </description>
     </item>
     
   </channel>

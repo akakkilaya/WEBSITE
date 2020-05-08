@@ -1,5 +1,5 @@
 ---
-title: Combining a passion for literature, research, and python
+title: Combining a passion for literature, research, and Python
 author: Akash Kakkilaya
 date: '2020-05-07'
 slug: reticulating-r-and-python
@@ -9,7 +9,7 @@ description: ''
 ---
 
 
-In this blog post, I combine my passion for literature, research, and data science. I began reading classic books, and one of my favorite was Moby Dick by Herman Melville. In the code block below, I have created a string of the opening paragraph of the book. I then took out all the punctuation marks with re.sub() and replaced them with spaces. I then made the string into a list of lower case words. I then did a count function to calculate how many times each word appears in the list. 
+In this blog post, I combine my passion for literature, research, and Python. I began reading classic books in the second grade, and one of my favorite was Moby Dick by Herman Melville. In the code block below, I have created a string of the opening paragraph of the book. I then took out all the punctuation marks with re.sub() and replaced them with spaces. I then made the string into a list of lower case words. I then did a count function to calculate how many times each word appears in the list. 
 
 
 
@@ -57,4 +57,4 @@ re.findall(r"A.TAAT|GC[A|G][A|T]TG",string5)
 
 ````
 
-Based on these results we see that there are 4 cuts and five fragments. 
+Based on these results we see that there are 4 cuts and 5 fragments. 

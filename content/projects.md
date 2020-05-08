@@ -14,4 +14,3 @@ Here are some projects I have recently completed:
 - [Modeling, Testing, and Classification](/project2/)
 
 
-tutGez-quwdyd-7riwqe
