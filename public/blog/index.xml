@@ -17,7 +17,7 @@
       <pubDate>Thu, 07 May 2020 00:00:00 +0000</pubDate>
       
       <guid>/blog/reticulating-r-and-python/</guid>
-      <description>In this blog post, I combine my passion for literature, research, and Python. I began reading classic books in the second grade, and one of my favorite was Moby Dick by Herman Melville. In the code block below, I have created a string of the opening paragraph of the book. I then took out all the punctuation marks with re.sub() and replaced them with spaces. I then made the string into a list of lower case words.</description>
+      <description>In this blog post, I combine my passion for literature, research, and data science. I began reading classic books in the second grade, and one of my favorite was Moby Dick by Herman Melville. In the code block below, I have created a string of the opening paragraph of the book. I then took out all the punctuation marks with re.sub() and replaced them with spaces. I then made the string into a list of lower case words.</description>
     </item>
     
   </channel>
